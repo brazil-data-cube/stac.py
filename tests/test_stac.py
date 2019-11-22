@@ -6,10 +6,6 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 
-"""Python Client Library for STAC."""
+"""Unit-test for STAC operations."""
 
-from .stac import stac
-from .version import __version__
-
-__all__ = ('__version__',
-           'stac', )
+from stac import stac

@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # This file is part of Python Client Library for STAC.
 # Copyright (C) 2019 INPE.
@@ -6,10 +7,8 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 
-"""Python Client Library for STAC."""
-
-from .stac import stac
-from .version import __version__
-
-__all__ = ('__version__',
-           'stac', )
+pydocstyle stac && \
+isort --check-only --diff --recursive **/*.py && \
+check-manifest --ignore ".travis-*" && \
+pytest && \
+sphinx-build -qnW --color -b doctest doc/sphinx/ doc/sphinx/_build/doctest
