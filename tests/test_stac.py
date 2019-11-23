@@ -9,3 +9,7 @@
 """Unit-test for STAC operations."""
 
 from stac import stac
+
+
+def test_capabilities():
+    assert 1 == 1
