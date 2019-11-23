@@ -11,8 +11,9 @@
 class stac:
     """This class implements a Python API client wrapper for STAC.
 
-     See https://github.com/radiantearth/stac-spec for more information on STAC.
+    See https://github.com/radiantearth/stac-spec for more information on STAC.
     """
+
     def __init__(self):
         """TODO."""
         pass
