@@ -32,7 +32,7 @@ tests_require = [
 
 extras_require = {
     'docs': docs_require,
-    'oauth': 'requests_oauthlib>=1.3',
+    'oauth': [ 'requests_oauthlib>=1.3' ],
     'tests': tests_require,
 }
 
