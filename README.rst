@@ -26,8 +26,8 @@ Python Client Library for STAC
         :target: https://coveralls.io/github/brazil-data-cube/stac.py?branch=master
         :alt: Code Coverage Test
 
-.. image:: https://readthedocs.org/projects/stac/badge/?version=latest
-        :target: https://stac.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/stacpy/badge/?version=latest
+        :target: https://stacpy.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 .. image:: https://img.shields.io/badge/lifecycle-experimental-orange.svg
