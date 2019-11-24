@@ -29,13 +29,15 @@ Python Client Library for STAC
 Installation
 ============
 
-**Under Development!**
+See `INSTALL.rst <./INSTALL.rst>`_
 
 
 Developer Documentation
 =======================
 
 **Under Development!**
+
+.. See https://stac.readthedocs.io/
 
 
 License
