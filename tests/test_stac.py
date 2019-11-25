@@ -18,7 +18,8 @@ url =  os.environ.get('STAC_SERVER_URL', 'http://localhost')
 def test_creation():
     service = stac(url)
 
-    assert service.url == url
+    assert url.count(service.url) == 1
+
 
 def test_conformance():
     service = stac(url)

@@ -22,7 +22,7 @@ class stac:
 
     def __init__(self, url):
         """Create a STAC client attached to the given host address (an URL)."""
-        self._url = url
+        self._url = url if url[-1] != '/' else url[0:-1]
 
 
     def capabilities(self):
@@ -32,12 +32,12 @@ class stac:
 
     def conformance(self):
         """Return the list of conformance classes that the server conforms to."""
-        return self._get('conformance')
+        return self._get('{}/conformance'.format(self._url))
 
 
     def catalog(self):
         """Return the root catalog or collection."""
-        return self._get('stac')
+        return self._get('{}/stac'.format(self._url))
 
 
     def collections(self):
@@ -67,16 +67,14 @@ class stac:
         return '<STAC [{}]>'.format(self.url)
 
 
-
-    def _get(self, rel_url=None, params=None):
+    @staticmethod
+    def _get(url, params=None):
         """Query the STAC service using HTTP GET verb and return the result.
 
         :rtype: dict
 
         :raises ValueError: If the response body does not contain a valid json.
         """
-        url = urljoin(self._url, rel_url) if rel_url is not None else self._url
-
         response = requests.get(url)
 
         response.raise_for_status()
@@ -84,7 +82,6 @@ class stac:
         content_type = response.headers.get('content-type')
 
         if content_type.count('application/json') == 0:
-            raise ValueError('HTTP response is not JSON: Content-Type: {}; URL1:{}, URL2:{}'.format(content_type, url, response.url))
-            #raise ValueError('HTTP response is not JSON: Content-Type: {}'.format(content_type))
+            raise ValueError('HTTP response is not JSON: Content-Type: {}'.format(content_type))
 
         return response.json()
