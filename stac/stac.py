@@ -44,9 +44,16 @@ class stac:
         pass
 
 
-    def search(self):
-        """TODO."""
-        pass
+    def search(self, filter=None):
+        """Retrieve Items matching a filter.
+
+        :param filter: (optional) A dictionary with valid STAC query parameters.
+        :type filter: dict
+
+        :returns: A feature collection.
+        :rtype: dict
+        """
+        return self._get('{}/stac/search'.format(self._url), params=filter)
 
 
     @property
@@ -68,13 +75,20 @@ class stac:
 
     @staticmethod
     def _get(url, params=None):
-        """Query the STAC service using HTTP GET verb and return the result.
+        """Query the STAC service using HTTP GET verb and return the result as a JSON document.
+
+        :param url: The URL to query must be a valid STAC endpoint.
+        :type url: str
+
+        :param params: (optional) Dictionary, list of tuples or bytes to send
+        in the query string for the underlying `Requests`.
+        :type params: dict
 
         :rtype: dict
 
         :raises ValueError: If the response body does not contain a valid json.
         """
-        response = requests.get(url)
+        response = requests.get(url, params=params)
 
         response.raise_for_status()
 
