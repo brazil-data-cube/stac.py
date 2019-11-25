@@ -9,6 +9,8 @@
 
 import requests
 
+from .utils import catalog
+
 
 class stac:
     """This class implements a Python API client wrapper for STAC.
@@ -36,7 +38,9 @@ class stac:
 
     def catalog(self):
         """Return the root catalog or collection."""
-        return self._get('{}/stac'.format(self._url))
+        url = '{}/stac'.format(self._url)
+        data = self._get(url)
+        return catalog(data)
 
 
     def collections(self):
@@ -94,7 +98,7 @@ class stac:
 
         content_type = response.headers.get('content-type')
 
-        if content_type.count('application/json') == 0:
+        if content_type not in ('application/json', 'application/geo+json'):
             raise ValueError('HTTP response is not JSON: Content-Type: {}'.format(content_type))
 
         return response.json()

@@ -37,3 +37,4 @@ def test_catalog():
     common_keys = { 'stac_version', 'id', 'description', 'links' }
 
     assert  common_keys <= set(retval.keys())
+
