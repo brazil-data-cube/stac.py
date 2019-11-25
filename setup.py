@@ -43,6 +43,7 @@ setup_requires = [
 ]
 
 install_requires = [
+    'requests>=2.20',
 ]
 
 packages = find_packages()
