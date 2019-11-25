@@ -31,45 +31,13 @@ class stac:
 
 
     def conformance(self):
-        """Return the list of conformance classes that the server conforms to.
-
-        :rtype: dict
-
-        :raises ValueError: If the response body does not contain valid json.
-        """
-        url = urljoin(self._url, 'conformance')
-
-        response = requests.get(url)
-
-        response.raise_for_status()
-
-        content_type = response.headers.get('content-type')
-
-        if content_type.count('application/json') == 0:
-            raise ValueError('HTTP response is not JSON: Content-Type: {}'.format(content_type))
-
-        return response.json()
+        """Return the list of conformance classes that the server conforms to."""
+        return self._get('conformance')
 
 
     def catalog(self):
-        """Return the root catalog or collection.
-
-        :rtype: dict
-
-        :raises ValueError: If the response body does not contain valid json.
-        """
-        url = urljoin(self._url, 'stac')
-
-        response = requests.get(url)
-
-        response.raise_for_status()
-
-        content_type = response.headers.get('content-type')
-
-        if content_type.count('application/json') == 0:
-            raise ValueError('HTTP response is not JSON: Content-Type: {}'.format(content_type))
-
-        return response.json()
+        """Return the root catalog or collection."""
+        return self._get('stac')
 
 
     def collections(self):
@@ -97,3 +65,25 @@ class stac:
     def __str__(self):
         """Return the string representation of a STAC object."""
         return '<STAC [{}]>'.format(self.url)
+
+
+
+    def _get(self, rel_url=None, params=None):
+        """Query the STAC service using HTTP GET verb and return the result.
+
+        :rtype: dict
+
+        :raises ValueError: If the response body does not contain a valid json.
+        """
+        url = urljoin(self._url, rel_url) if rel_url is not None else self._url
+
+        response = requests.get(url)
+
+        response.raise_for_status()
+
+        content_type = response.headers.get('content-type')
+
+        if content_type.count('application/json') == 0:
+            raise ValueError('HTTP response is not JSON: Content-Type: {}'.format(content_type))
+
+        return response.json()

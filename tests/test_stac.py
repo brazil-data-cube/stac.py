@@ -33,6 +33,6 @@ def test_catalog():
 
     retval = service.catalog()
 
-    common_keys = { 'stac_versionn', 'links' }
+    common_keys = { 'stac_version', 'links' }
 
     assert  common_keys <= set(retval.keys())
