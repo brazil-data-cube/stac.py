@@ -8,7 +8,6 @@
 """Python API client wrapper for STAC."""
 
 import requests
-from requests.compat import urljoin
 
 
 class stac:
