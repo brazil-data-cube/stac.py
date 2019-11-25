@@ -8,8 +8,31 @@
 
 """Unit-test for STAC operations."""
 
+import os
+
 from stac import stac
 
+url =  os.environ.get('STAC_SERVER_URL', 'http://localhost')
 
-def test_capabilities():
-    assert 1 == 1
+
+def test_creation():
+    service = stac(url)
+
+    assert service.url == url
+
+def test_conformance():
+    service = stac(url)
+
+    retval = service.conformance()
+
+    assert 'conformsTo' in retval
+
+
+def test_catalog():
+    service = stac(url)
+
+    retval = service.catalog()
+
+    common_keys = { 'stac_versionn', 'links' }
+
+    assert  common_keys <= set(retval.keys())
