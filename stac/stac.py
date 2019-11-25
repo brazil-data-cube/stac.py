@@ -84,7 +84,7 @@ class stac:
         content_type = response.headers.get('content-type')
 
         if content_type.count('application/json') == 0:
-            raise ValueError('HTTP response is not JSON: Content-Type: {}; Content:{}'.format(content_type, response.content))
+            raise ValueError('HTTP response is not JSON: Content-Type: {}; URL1:{}, URL2:{}'.format(content_type, url, response.url))
             #raise ValueError('HTTP response is not JSON: Content-Type: {}'.format(content_type))
 
         return response.json()
