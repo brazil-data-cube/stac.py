@@ -9,7 +9,7 @@
 
 import requests
 
-from .utils import catalog
+from .utils import Catalog
 
 
 class stac:
