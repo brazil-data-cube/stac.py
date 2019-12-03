@@ -1,1 +1,1 @@
-http://brazildatacube.dpi.inpe.br/bdc-stac/stac
+
