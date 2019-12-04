@@ -25,8 +25,8 @@ class stac:
 
 
     def capabilities(self):
-        """TODO."""
-        pass
+        """Return the list of available routes for the STAC API."""
+        return self._get('{}'.format(self._url))
 
 
     def conformance(self):
@@ -41,8 +41,9 @@ class stac:
 
 
     def collections(self):
-        """TODO."""
-        pass
+        url = '{}/collections'.format(self._url)
+        data = self._get(url)
+        return Catalog(data)
 
 
     def search(self, filter=None):

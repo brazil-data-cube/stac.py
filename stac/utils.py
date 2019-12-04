@@ -6,6 +6,9 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Utility data structures and algorithms."""
+import json
+from jsonschema import validate
+import pkg_resources
 
 
 class Link(dict):
@@ -92,3 +95,11 @@ class Catalog(dict):
     def links(self):
         """Return a list of resources in the catalog."""
         return self['links']
+
+
+class Collection(Catalog):
+    def __init__(self, data):
+        resource_path = '/'.join(('jsonschemas', 'collection.json'))
+        schema = pkg_resources.resource_string(resource_package, resource_path)
+        validate(data, schema=json.loads(schema))
+        super(Collection, self).__init__(data or {})
