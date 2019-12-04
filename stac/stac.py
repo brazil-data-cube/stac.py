@@ -9,8 +9,6 @@
 
 import requests
 
-from .utils import Catalog
-
 
 class stac:
     """This class implements a Python API client wrapper for STAC.
@@ -39,8 +37,7 @@ class stac:
     def catalog(self):
         """Return the root catalog or collection."""
         url = '{}/stac'.format(self._url)
-        data = self._get(url)
-        return catalog(data)
+        return self._get(url)
 
 
     def collections(self):
@@ -49,7 +46,7 @@ class stac:
 
 
     def search(self, filter=None):
-        """Retrieve Items matching a filter.
+        """Search STAC items with simple filtering.
 
         :param filter: (optional) A dictionary with valid STAC query parameters.
         :type filter: dict
