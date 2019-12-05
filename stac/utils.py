@@ -54,13 +54,16 @@ class Link(dict):
 
     @property
     def type(self):
-        """:return: the type of the Link object."""
+        """
+        :return: the type of the Link object.
+        """
         return self['type']
 
     @property
     def title(self):
         """
-        :return: the title of the Link object."""
+        :return: the title of the Link object.
+        """
         return self['title']
 
 
