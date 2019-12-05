@@ -6,100 +6,351 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Utility data structures and algorithms."""
+
 import json
-from jsonschema import validate
 import pkg_resources
+from jsonschema import validate
+
+resource_package = __name__
+
+try:
+    catalog_schema = json.loads(pkg_resources.resource_string(resource_package,
+                                                              f'jsonschemas/0.7.0/catalog.json'))
+
+    collection_schema = json.loads(pkg_resources.resource_string(resource_package,
+                                                                 f'jsonschemas/0.7.0/collection.json'))
+
+    item_schema = json.loads(pkg_resources.resource_string(resource_package,
+                                                           f'jsonschemas/0.7.0/item.json'))
+    item_collection_schema = json.loads(pkg_resources.resource_string(resource_package,
+                                                                      f'jsonschemas/0.7.0/itemcollection.json'))
+except Exception as e:
+    raise Exception(f'Error while loading validation schemas: {e}')
 
 
 class Link(dict):
     """"Link object"""
 
-    def __init__(self, rel, href, type=None, title=None):
-        self['rel'] = rel
-        self['href'] = href
-        if type is not None: self['type'] = type
-        if title is not None: self['title'] = title
-        super(Link, self)
+    def __init__(self, data):
+        """Initialize instance with dictionary data.
+
+        :param data: Dict with Link metadata.
+        """
+        super(Link, self).__init__(data or {})
 
     @property
     def rel(self):
-        """Return the relation of the Link object."""
+        """
+        :return: the Link relation.
+        """
         return self['rel']
 
     @property
     def href(self):
-        """Return the URL of the Link object."""
+        """
+        :return: the Link url.
+        """
         return self['href']
 
     @property
     def type(self):
-        """Return the type of the Link object."""
+        """:return: the type of the Link object."""
         return self['type']
 
     @property
     def title(self):
-        """Return the title of the Link object."""
+        """
+        :return: the title of the Link object."""
         return self['title']
 
 
-class Catalog(dict):
-    """The root STAC Catalog."""
+class Extent(dict):
+    """"The Extent object"""
 
-    def __init__(self, stac_version, id, description, links, **kwargs):
+    def __init__(self, data):
+        """Initialize instance with dictionary data.
+
+        :param data: Dict with Extent metadata.
+        """
+        super(Extent, self).__init__(data or {})
+
+    @property
+    def spatial(self):
+        """"
+        :return: the spatial extent.
+        """
+        return self['spatial']
+
+    @property
+    def temporal(self):
+        """"
+        :return: the temporal extent.
+        """
+        return self['temporal']
+
+
+class Provider(dict):
+    """The Provider Object"""
+
+    def __init__(self, data):
+        """Initialize instance with dictionary data.
+
+        :param data: Dict with Provider metadata.
+        """
+        super(Provider, self).__init__(data or {})
+
+    @property
+    def name(self):
+        """
+        :return: the Provider name.
+        """
+        return self['name']
+
+    @property
+    def description(self):
+        """
+        :return: the Provider description.
+        """
+        return self['description']
+
+    @property
+    def roles(self):
+        """
+        :return: the Provider roles.
+        """
+        return self['description']
+
+    @property
+    def url(self):
+        """
+        :return: the Provider url.
+        """
+        return self['url']
+
+
+class Catalog(dict):
+    """The STAC Catalog."""
+
+    def __init__(self, data, validation=True):
         """Initialize instance with dictionary data.
 
         :param data: Dict with catalog metadata.
+        :param validation: True if the Catalog must be validated. (Default is True)
         """
-        self['stac_version'] = stac_version
-        self['id'] = id
-        self['description'] = description
-        if isinstance(links, list):
-            for link in links:
-                if not isinstance(link, Link):
-                    raise ValueError("links is not a list of Link objects.")
-            self['links'] = links
-
-        super(Catalog, self).__init__(self, **kwargs)
+        if validation:
+            validate(data, schema=catalog_schema)
+        super(Catalog, self).__init__(data or {})
 
     @property
     def stac_version(self):
-        """Return the STAC version."""
+        """
+        :return: the STAC version.
+        """
         return self['stac_version']
 
     @property
-    def stac_extensions(self):
-        """Return the list of supported extensions."""
-        return self['stac_extensions'] if 'stac_extensions' in self else None
-
-    @property
     def id(self):
-        """Return the catalog identifier."""
+        """
+        :return: the catalog identifier.
+        """
         return self['id']
 
     @property
     def title(self):
-        """Return the catalog title."""
+        """
+        :return: the catalog title.
+        """
         return self['title'] if 'title' in self else None
 
     @property
     def description(self):
-        """Return the catalog description."""
+        """
+        :return: the catalog description.
+        """
         return self['description']
 
     @property
-    def summaries(self):
-        """Return a summary about the catalog."""
-        return self['summaries'] if 'summaries' in self else None
-
-    @property
     def links(self):
-        """Return a list of resources in the catalog."""
+        """
+        :return: a list of resources in the catalog.
+        """
         return self['links']
 
 
 class Collection(Catalog):
-    def __init__(self, data):
-        resource_path = '/'.join(('jsonschemas', 'collection.json'))
-        schema = pkg_resources.resource_string(resource_package, resource_path)
-        validate(data, schema=json.loads(schema))
+    """The STAC Collection"""
+
+    def __init__(self, data, validation=True):
+        """Initialize instance with dictionary data.
+
+        :param data: Dict with collection metadata.
+        :param validation: True if the Collection must be validated. (Default is True)        
+        """
+
+        if validation:
+            validate(data, schema=collection_schema)
         super(Collection, self).__init__(data or {})
+
+    @property
+    def keywords(self):
+        """
+        :return: the Collection list of keywords.
+        """
+        return self['keywords']
+
+    @property
+    def license(self):
+        """
+        :return: the Collection license.
+        """
+        return self['license']
+
+    @property
+    def version(self):
+        """
+        :return: the Collection version.
+        """
+        return self['version']
+
+    @property
+    def providers(self):
+        """
+        :return: the Collection list of providers.
+        """
+        return self['providers']
+
+    @property
+    def extent(self):
+        """
+        :return: the Collection extent.
+        """
+        return self['extent']
+
+    @property
+    def properties(self):
+        """
+        :return: the Collection properties.
+        """
+        return self['properties']
+
+
+class Geometry(dict):
+    """The Geometry Object"""
+
+    def __init__(self, data):
+        """Initialize instance with dictionary data.
+
+        :param data: Dict with Geometry metadata.
+        """
+        super(Geometry, self).__init__(data or {})
+
+    @property
+    def type(self):
+        """
+        :return: the Geometry type.
+        """
+        return self['type']
+
+    @property
+    def coordinates(self):
+        """
+        :return: the Geometry coordinates.
+        """
+        return self['coordinates']
+
+
+class Item(dict):
+    """The GeoJSON Feature of a STAC Item."""
+
+    def __init__(self, data, validation=True):
+        """Initialize instance with dictionary data.
+
+        :param data: Dict with Item metadata.
+        :param validation: True if the Item must be validated. (Default is True)
+        """
+        if validation:
+            validate(data, schema=item_schema)
+        super(Item, self).__init__(data or {})
+
+    @property
+    def id(self):
+        """
+        :return: the Item identifier.
+        """
+        return self['id']
+
+    @property
+    def type(self):
+        """
+        :return: the Item type.
+        """
+        return self['type']
+
+    @property
+    def geometry(self):
+        """
+        :return: the Item Geometry.
+        """
+        return self['geometry']
+
+    @property
+    def bbox(self):
+        """
+        :return: the Item Bounding Box.
+        """
+        return self['bbox']
+
+    @property
+    def properties(self):
+        """
+        :return: the Item properties.
+        """
+        return self['properties']
+
+    @property
+    def links(self):
+        """
+        :return: the Item related links.
+        """
+        return self['links']
+
+    @property
+    def assets(self):
+        """
+        :return: the Item related assets.
+        """
+        return self['assets']
+
+    @property
+    def collection(self):
+        """
+        :return: the Item Collection
+        """
+        return self['collection']
+
+
+class ItemCollection(dict):
+    """The GeoJSON Feature Collection of STAC Items"""
+    def __init__(self, data, validation=True):
+        """Initialize instance with dictionary data.
+
+        :param data: Dict with Item Collection metadata.
+        :param validation: True if the Item Collection must be validated. (Default is True)        
+        """
+        if validation:
+            validate(data, schema=item_collection_schema)
+        super(ItemCollection, self).__init__(data or {})
+
+    @property
+    def type(self):
+        """
+        :return: the Item Collection type.
+        """
+        return self['type']
+
+    @property
+    def features(self):
+        """
+        :return: the Item Collection list of GeoJSON Features.
+        """
+        return self['features']
