@@ -12,6 +12,7 @@ include *.sh
 include *.txt
 include LICENSE
 include pytest.ini
+recursive-include stac/jsonschemas *.json
 recursive-exclude doc/sphinx/_build *
 recursive-include doc *.bat
 recursive-include doc *.css
