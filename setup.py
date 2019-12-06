@@ -43,8 +43,10 @@ setup_requires = [
 ]
 
 install_requires = [
-    'requests>=2.20',
     'Click>=7.0',
+    'jsonschema>=3.2',
+    'requests>=2.20',
+
 ]
 
 packages = find_packages()
