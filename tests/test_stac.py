@@ -10,19 +10,18 @@
 
 import os
 
-from stac import stac
+from stac import STAC
 
 url =  os.environ.get('STAC_SERVER_URL', 'http://localhost')
 
-
 def test_creation():
-    service = stac(url)
+    service = STAC(url)
 
     assert url.count(service.url) == 1
 
 
 def test_conformance():
-    service = stac(url)
+    service = STAC(url)
 
     retval = service.conformance()
 
@@ -30,7 +29,7 @@ def test_conformance():
 
 
 def test_catalog():
-    service = stac(url)
+    service = STAC(url)
 
     retval = service.catalog()
 
