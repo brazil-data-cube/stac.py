@@ -10,26 +10,55 @@
 import json
 import pkg_resources
 from jsonschema import validate
+import requests
 
 resource_package = __name__
 
 try:
     catalog_schema = json.loads(pkg_resources.resource_string(resource_package,
-                                                              f'jsonschemas/0.7.0/catalog.json'))
+                                                              f'jsonschemas/0.8.0/catalog.json'))
 
     collection_schema = json.loads(pkg_resources.resource_string(resource_package,
-                                                                 f'jsonschemas/0.7.0/collection.json'))
+                                                                 f'jsonschemas/0.8.0/collection.json'))
 
     item_schema = json.loads(pkg_resources.resource_string(resource_package,
-                                                           f'jsonschemas/0.7.0/item.json'))
+                                                           f'jsonschemas/0.8.0/item.json'))
     item_collection_schema = json.loads(pkg_resources.resource_string(resource_package,
-                                                                      f'jsonschemas/0.7.0/itemcollection.json'))
+                                                                      f'jsonschemas/0.8.0/itemcollection.json'))
 except Exception as e:
     raise Exception(f'Error while loading validation schemas: {e}')
 
+class Utils:
+    """Utils STAC object."""
+
+    @staticmethod
+    def _get(url, params=None):
+        """Query the STAC service using HTTP GET verb and return the result as a JSON document.
+
+        :param url: The URL to query must be a valid STAC endpoint.
+        :type url: str
+
+        :param params: (optional) Dictionary, list of tuples or bytes to send
+        in the query string for the underlying `Requests`.
+        :type params: dict
+
+        :rtype: dict
+
+        :raises ValueError: If the response body does not contain a valid json.
+        """
+        response = requests.get(url, params=params)
+
+        response.raise_for_status()
+
+        content_type = response.headers.get('content-type')
+
+        if content_type not in ('application/json', 'application/geo+json'):
+            raise ValueError('HTTP response is not JSON: Content-Type: {}'.format(content_type))
+
+        return response.json()
 
 class Link(dict):
-    """"Link object"""
+    """Link object."""
 
     def __init__(self, data):
         """Initialize instance with dictionary data.
@@ -40,35 +69,27 @@ class Link(dict):
 
     @property
     def rel(self):
-        """
-        :return: the Link relation.
-        """
+        """:return: the Link relation."""
         return self['rel']
 
     @property
     def href(self):
-        """
-        :return: the Link url.
-        """
+        """:return: the Link url."""
         return self['href']
 
     @property
     def type(self):
-        """
-        :return: the type of the Link object.
-        """
+        """:return: the type of the Link object."""
         return self['type']
 
     @property
     def title(self):
-        """
-        :return: the title of the Link object.
-        """
+        """:return: the title of the Link object."""
         return self['title']
 
 
 class Extent(dict):
-    """"The Extent object"""
+    """The Extent object."""
 
     def __init__(self, data):
         """Initialize instance with dictionary data.
@@ -79,21 +100,17 @@ class Extent(dict):
 
     @property
     def spatial(self):
-        """"
-        :return: the spatial extent.
-        """
+        """:return: the spatial extent."""
         return self['spatial']
 
     @property
     def temporal(self):
-        """"
-        :return: the temporal extent.
-        """
+        """:return: the temporal extent."""
         return self['temporal']
 
 
 class Provider(dict):
-    """The Provider Object"""
+    """The Provider Object."""
 
     def __init__(self, data):
         """Initialize instance with dictionary data.
@@ -104,37 +121,29 @@ class Provider(dict):
 
     @property
     def name(self):
-        """
-        :return: the Provider name.
-        """
+        """:return: the Provider name."""
         return self['name']
 
     @property
     def description(self):
-        """
-        :return: the Provider description.
-        """
+        """:return: the Provider description."""
         return self['description']
 
     @property
     def roles(self):
-        """
-        :return: the Provider roles.
-        """
+        """:return: the Provider roles."""
         return self['description']
 
     @property
     def url(self):
-        """
-        :return: the Provider url.
-        """
+        """:return: the Provider url."""
         return self['url']
 
 
 class Catalog(dict):
     """The STAC Catalog."""
 
-    def __init__(self, data, validation=True):
+    def __init__(self, data, validation=False):
         """Initialize instance with dictionary data.
 
         :param data: Dict with catalog metadata.
@@ -146,99 +155,93 @@ class Catalog(dict):
 
     @property
     def stac_version(self):
-        """
-        :return: the STAC version.
-        """
+        """:return: the STAC version."""
         return self['stac_version']
 
     @property
+    def stac_extensions(self):
+        """:return: the STAC extensions."""
+        return self['stac_extensions']
+
+    @property
     def id(self):
-        """
-        :return: the catalog identifier.
-        """
+        """:return: the catalog identifier."""
         return self['id']
 
     @property
     def title(self):
-        """
-        :return: the catalog title.
-        """
+        """:return: the catalog title."""
         return self['title'] if 'title' in self else None
 
     @property
     def description(self):
-        """
-        :return: the catalog description.
-        """
+        """:return: the catalog description."""
         return self['description']
 
     @property
+    def summaries(self):
+        """:return: the catalog summaries."""
+        return self['summaries']
+
+    @property
     def links(self):
-        """
-        :return: a list of resources in the catalog.
-        """
+        """:return: a list of resources in the catalog."""
         return self['links']
 
 
 class Collection(Catalog):
-    """The STAC Collection"""
+    """The STAC Collection."""
 
-    def __init__(self, data, validation=True):
+    def __init__(self, data, validation=False):
         """Initialize instance with dictionary data.
 
         :param data: Dict with collection metadata.
         :param validation: True if the Collection must be validated. (Default is True)        
         """
-
         if validation:
             validate(data, schema=collection_schema)
         super(Collection, self).__init__(data or {})
 
     @property
     def keywords(self):
-        """
-        :return: the Collection list of keywords.
-        """
+        """:return: the Collection list of keywords."""
         return self['keywords']
 
     @property
-    def license(self):
-        """
-        :return: the Collection license.
-        """
-        return self['license']
-
-    @property
     def version(self):
-        """
-        :return: the Collection version.
-        """
+        """:return: the Collection version."""
         return self['version']
 
     @property
+    def license(self):
+        """:return: the Collection license."""
+        return self['license']
+
+    @property
     def providers(self):
-        """
-        :return: the Collection list of providers.
-        """
+        """:return: the Collection list of providers."""
         return self['providers']
 
     @property
     def extent(self):
-        """
-        :return: the Collection extent.
-        """
+        """:return: the Collection extent."""
         return self['extent']
 
     @property
     def properties(self):
-        """
-        :return: the Collection properties.
-        """
+        """:return: the Collection properties."""
         return self['properties']
 
+    def items(self, filter=None):
+        """:return: the Collection list of items."""
+        for link in self['links']:
+            if link['rel'] == 'items':
+                data = Utils._get(link['href'], params=filter)
+                return ItemCollection(data)
+        return ItemCollection({})
 
 class Geometry(dict):
-    """The Geometry Object"""
+    """The Geometry Object."""
 
     def __init__(self, data):
         """Initialize instance with dictionary data.
@@ -249,23 +252,19 @@ class Geometry(dict):
 
     @property
     def type(self):
-        """
-        :return: the Geometry type.
-        """
+        """:return: the Geometry type."""
         return self['type']
 
     @property
     def coordinates(self):
-        """
-        :return: the Geometry coordinates.
-        """
+        """:return: the Geometry coordinates."""
         return self['coordinates']
 
 
 class Item(dict):
     """The GeoJSON Feature of a STAC Item."""
 
-    def __init__(self, data, validation=True):
+    def __init__(self, data, validation=False):
         """Initialize instance with dictionary data.
 
         :param data: Dict with Item metadata.
@@ -276,65 +275,60 @@ class Item(dict):
         super(Item, self).__init__(data or {})
 
     @property
-    def id(self):
-        """
-        :return: the Item identifier.
-        """
-        return self['id']
+    def stac_version(self):
+        """:return: the STAC version."""
+        return self['stac_version']
 
     @property
+    def stac_extensions(self):
+        """:return: the STAC extensions."""
+        return self['stac_extensions']
+
+    @property
+    def id(self):
+        """:return: the Item identifier."""
+        return self['id']
+    
+    @property
     def type(self):
-        """
-        :return: the Item type.
-        """
+        """:return: the Item type."""
         return self['type']
 
     @property
-    def geometry(self):
-        """
-        :return: the Item Geometry.
-        """
-        return self['geometry']
-
-    @property
     def bbox(self):
-        """
-        :return: the Item Bounding Box.
-        """
+        """:return: the Item Bounding Box."""
         return self['bbox']
 
     @property
+    def collection(self):
+        """:return: the Item Collection."""
+        return self['collection']
+
+    @property
+    def geometry(self):
+        """:return: the Item Geometry."""
+        return self['geometry']
+
+    @property
     def properties(self):
-        """
-        :return: the Item properties.
-        """
+        """:return: the Item properties."""
         return self['properties']
 
     @property
     def links(self):
-        """
-        :return: the Item related links.
-        """
+        """:return: the Item related links."""
         return self['links']
 
     @property
     def assets(self):
-        """
-        :return: the Item related assets.
-        """
+        """:return: the Item related assets."""
         return self['assets']
-
-    @property
-    def collection(self):
-        """
-        :return: the Item Collection
-        """
-        return self['collection']
 
 
 class ItemCollection(dict):
-    """The GeoJSON Feature Collection of STAC Items"""
-    def __init__(self, data, validation=True):
+    """The GeoJSON Feature Collection of STAC Items."""
+
+    def __init__(self, data, validation=False):
         """Initialize instance with dictionary data.
 
         :param data: Dict with Item Collection metadata.
@@ -346,14 +340,10 @@ class ItemCollection(dict):
 
     @property
     def type(self):
-        """
-        :return: the Item Collection type.
-        """
+        """:return: the Item Collection type."""
         return self['type']
 
     @property
     def features(self):
-        """
-        :return: the Item Collection list of GeoJSON Features.
-        """
-        return self['features']
+        """:return: the Item Collection list of GeoJSON Features."""
+        return [Item(i) for i in self['features']]
