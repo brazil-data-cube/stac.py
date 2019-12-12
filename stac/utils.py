@@ -9,12 +9,17 @@
 
 import json
 import pkg_resources
-from jsonschema import validate
+from jsonschema import validate, RefResolver
 import requests
+import os
 
 resource_package = __name__
 
 try:
+
+    schema_path = 'file:///{0}/'.format(
+        os.path.dirname(pkg_resources.resource_filename('stac.utils', 'jsonschemas/0.8.0/catalog.json')))
+
     catalog_schema = json.loads(pkg_resources.resource_string(resource_package,
                                                               f'jsonschemas/0.8.0/catalog.json'))
 
@@ -147,7 +152,7 @@ class Catalog(dict):
         """Initialize instance with dictionary data.
 
         :param data: Dict with catalog metadata.
-        :param validation: True if the Catalog must be validated. (Default is True)
+        :param validation: True if the Catalog must be validated. (Default is False)
         """
         if validation:
             validate(data, schema=catalog_schema)
@@ -196,10 +201,10 @@ class Collection(Catalog):
         """Initialize instance with dictionary data.
 
         :param data: Dict with collection metadata.
-        :param validation: True if the Collection must be validated. (Default is True)        
+        :param validation: True if the Collection must be validated. (Default is False)        
         """
         if validation:
-            validate(data, schema=collection_schema)
+            validate(data, schema=collection_schema, resolver=RefResolver(schema_path, collection_schema))
         super(Collection, self).__init__(data or {})
 
     @property
@@ -240,6 +245,7 @@ class Collection(Catalog):
                 return ItemCollection(data)
         return ItemCollection({})
 
+
 class Geometry(dict):
     """The Geometry Object."""
 
@@ -268,10 +274,10 @@ class Item(dict):
         """Initialize instance with dictionary data.
 
         :param data: Dict with Item metadata.
-        :param validation: True if the Item must be validated. (Default is True)
+        :param validation: True if the Item must be validated. (Default is False)
         """
         if validation:
-            validate(data, schema=item_schema)
+            validate(data, schema=item_schema, )
         super(Item, self).__init__(data or {})
 
     @property
@@ -332,10 +338,10 @@ class ItemCollection(dict):
         """Initialize instance with dictionary data.
 
         :param data: Dict with Item Collection metadata.
-        :param validation: True if the Item Collection must be validated. (Default is True)        
+        :param validation: True if the Item Collection must be validated. (Default is False)        
         """
         if validation:
-            validate(data, schema=item_collection_schema)
+            validate(data, schema=item_collection_schema, resolver=RefResolver(schema_path, item_collection_schema))
         super(ItemCollection, self).__init__(data or {})
 
     @property
