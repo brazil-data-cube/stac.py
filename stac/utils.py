@@ -237,7 +237,7 @@ class Collection(Catalog):
         """:return: the Collection properties."""
         return self['properties']
 
-    def items(self, filter=None):
+    def get_items(self, filter=None):
         """:return: the Collection list of items."""
         for link in self['links']:
             if link['rel'] == 'items':
