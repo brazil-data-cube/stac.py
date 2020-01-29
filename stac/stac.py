@@ -25,7 +25,7 @@ class STAC:
         """Create a STAC client attached to the given host address (an URL)."""
         self._url = url if url[-1] != '/' else url[0:-1]
         self._collections = None
-        self._catalog = 
+        self._catalog = None
     
     @property
     def conformance(self):
