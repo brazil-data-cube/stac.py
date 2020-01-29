@@ -44,7 +44,6 @@ setup_requires = [
 
 install_requires = [
     'Click>=7.0',
-    'jsonschema>=3.2',
     'requests>=2.20',
 
 ]

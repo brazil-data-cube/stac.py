@@ -7,8 +7,10 @@
 #
 """Python API client wrapper for STAC."""
 
-from .utils import Utils, Catalog, Collection, Item, ItemCollection
-
+from .catalog import Catalog
+from .collection import Collection
+from .utils import Utils
+from .item import ItemCollection
 
 class STAC:
     """This class implements a Python API client wrapper for STAC.
@@ -22,27 +24,50 @@ class STAC:
     def __init__(self, url):
         """Create a STAC client attached to the given host address (an URL)."""
         self._url = url if url[-1] != '/' else url[0:-1]
-
-    def capabilities(self):
-        """Return the list of available routes for the STAC API."""
-        return Utils._get('{}/'.format(self._url))
-
+        self._collections = None
+        self._catalog = 
+    
+    @property
     def conformance(self):
         """Return the list of conformance classes that the server conforms to."""
         return Utils._get('{}/conformance'.format(self._url))
-
+    
+    @property
     def catalog(self):
-        """Return the root catalog or collection."""
+        """
+        Retrieves the available collections in the STAC Catalog.
+        :return list of available collections.
+        """
+        if self._collections is not None:
+            return self._collections.keys()
+
+        self._collections = dict()
+
         url = '{}/stac'.format(self._url)
-        data = Utils._get(url)
-        return Catalog(data)
-
+        self._catalog = Catalog(Utils._get(url))
+        
+        for i in self._catalog.links:
+            if i.rel == 'child':
+                self._collections[i.href.split('/')[-1]] = None
+        return self._collections.keys()
+    
+    @property
     def collections(self):
-        """Return the root catalog or collection."""
-        url = '{}/collections'.format(self._url)
-        data = Utils._get(url)
-        return Catalog(data)
+        """
+        :return a dict with the STAC Colletion for every available collection.
+        """
+        if self._collections is None:
+            self.catalog
 
+        for collection_id in self._collections.keys():
+            try:
+                data = Utils._get(f'{self._url}/collections/{collection_id}')
+                self._collections[collection_id] = Collection(data)
+            except:
+                pass
+
+        return self._collections
+    
     def collection(self, collection_id):
         """Return the given collection.
         
@@ -52,38 +77,16 @@ class STAC:
         :returns: A STAC Collection.
         :rtype: dict
         """
-        url = '{}/collections/{}'.format(self._url, collection_id)
-        data = Utils._get(url)
-        return Collection(data)
+        if collection_id in self._collections.keys() and \
+            self._collections[collection_id].value() is not None:
+            return self._collections[collection_id] 
+        try:
+            data = Utils._get(f'{self._url}/collections/{collection_id}')
+            self._collections[collection_id] = Collection(data)
+        except Exception as e:
+            raise Exception(f'Could not retrieve information for collection: {collection_id}')
+        return self._collections[collection_id] 
 
-    def collection_items(self, collection_id, filter=None):
-        """Return the items of a given collection.
-
-        :param collection_id: A str for a given collection_id.
-        :type collection_id: str
-
-        :returns: A GeoJSON FeatureCollection with items of a given collection.
-        :rtype: dict
-        """
-        url = '{}/collections/{}/items'.format(self._url, collection_id)
-        data = Utils._get(url, params=filter)
-        return ItemCollection(data)
-
-    def collection_item(self, collection_id, item_id):
-        """Return a given item of a given collection.
-
-        :param collection_id: A str for a given collection_id.
-        :type collection_id: str
-
-        :param item_id: A str for a given item_id.
-        :type item_id: str
-
-        :returns: A GeoJSON Feature of the item from a given collection.
-        :rtype: dict
-        """
-        url = '{}/collections/{}/items/item_id'.format(self._url, collection_id, item_id)
-        data = Utils._get(url)
-        return Item(data)
 
     def search(self, filter=None):
         """Retrieve Items matching a filter.
@@ -91,7 +94,7 @@ class STAC:
         :param filter: (optional) A dictionary with valid STAC query parameters.
         :type filter: dict
 
-        :returns: A feature collection.
+        :returns: A GeoJSON FeatureCollection.
         :rtype: dict
         """
         url = '{}/stac/search'.format(self._url)
@@ -111,5 +114,3 @@ class STAC:
     def __str__(self):
         """Return the string representation of a STAC object."""
         return '<STAC [{}]>'.format(self.url)
-
-    
