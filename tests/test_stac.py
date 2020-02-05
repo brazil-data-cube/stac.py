@@ -9,10 +9,13 @@
 """Unit-test for STAC operations."""
 
 import os
+import unittest
+from unittest.mock import patch
+
 
 from stac import STAC
 
-url =  os.environ.get('STAC_SERVER_URL', 'http://localhost')
+url =  os.environ.get('STAC_SERVER_URL', 'http://brazildatacube.dpi.inpe.br/bdc-stac/0.7.0')
 
 def test_creation():
     service = STAC(url)
@@ -37,3 +40,23 @@ def test_catalog():
 
     assert  common_keys <= set(retval.keys())
 
+
+# TODO: Mock API using unittest.mock.patch and json schemas
+class TestSTAC(unittest.TestCase):
+    def setUp(self):
+        self.service = STAC(url)
+
+    def test_collection(self):
+        collection_name = 'S10mMEDIAN'
+
+        res = self.service.collection(collection_name)
+
+        self.assertEqual(res['id'], collection_name)
+        self.assertIn('properties', res)
+        self.assertIn('links', res)
+        self.assertIn('stac_version', res)
+
+    def test_collection_not_found(self):
+        # TODO: Service collection should not throw too abroad exception
+        with self.assertRaises(Exception) as e:
+            self.service.collection('UnknownCollection')

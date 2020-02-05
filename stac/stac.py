@@ -26,12 +26,12 @@ class STAC:
         self._url = url if url[-1] != '/' else url[0:-1]
         self._collections = None
         self._catalog = None
-    
+
     @property
     def conformance(self):
         """Return the list of conformance classes that the server conforms to."""
         return Utils._get('{}/conformance'.format(self._url))
-    
+
     @property
     def catalog(self):
         """
@@ -45,12 +45,12 @@ class STAC:
 
         url = '{}/stac'.format(self._url)
         self._catalog = Catalog(Utils._get(url))
-        
+
         for i in self._catalog.links:
             if i.rel == 'child':
                 self._collections[i.href.split('/')[-1]] = None
         return self._collections.keys()
-    
+
     @property
     def collections(self):
         """
@@ -67,25 +67,25 @@ class STAC:
                 pass
 
         return self._collections
-    
+
     def collection(self, collection_id):
         """Return the given collection.
-        
+
         :param collection_id: A str for a given collection_id.
         :type collection_id: str
 
         :returns: A STAC Collection.
         :rtype: dict
         """
-        if collection_id in self._collections.keys() and \
-            self._collections[collection_id].value() is not None:
-            return self._collections[collection_id] 
+        if collection_id in self.collections.keys() and \
+            self._collections[collection_id] is not None:
+            return self._collections[collection_id]
         try:
             data = Utils._get(f'{self._url}/collections/{collection_id}')
             self._collections[collection_id] = Collection(data)
         except Exception as e:
             raise Exception(f'Could not retrieve information for collection: {collection_id}')
-        return self._collections[collection_id] 
+        return self._collections[collection_id]
 
 
     def search(self, filter=None):
