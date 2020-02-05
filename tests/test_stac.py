@@ -15,7 +15,7 @@ from unittest.mock import patch
 
 from stac import STAC
 
-url =  os.environ.get('STAC_SERVER_URL', 'http://brazildatacube.dpi.inpe.br/bdc-stac/0.7.0')
+url =  os.environ.get('STAC_SERVER_URL', 'http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0')
 
 def test_creation():
     service = STAC(url)
