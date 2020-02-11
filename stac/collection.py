@@ -15,42 +15,12 @@ class Extent(dict):
     @property
     def spatial(self):
         """:return: the spatial extent."""
-        return SpatialExtent(self['spatial'])
+        return self['spatial']
 
     @property
     def temporal(self):
         """:return: the temporal extent."""
-        return TemporalExtent(self['temporal'])
-
-class SpatialExtent(dict):
-    """The Spatial Extent object."""
-
-    def __init__(self, data):
-        """Initialize instance with dictionary data.
-
-        :param data: Dict with Spatial Extent metadata.
-        """
-        super(SpatialExtent, self).__init__(data or {})
-
-    @property
-    def bbox(self):
-        """:return: the bbox of the Spatial Extent."""
-        return self['bbox']
-
-class TemporalExtent(dict):
-    """The Temporal Extent object."""
-
-    def __init__(self, data):
-        """Initialize instance with dictionary data.
-
-        :param data: Dict with Temporal Extent metadata.
-        """
-        super(TemporalExtent, self).__init__(data or {})
-
-    @property
-    def interval(self):
-        """:return: the interval of the Temporal Extent."""
-        return self['interval']
+        return self['temporal']
 
 
 class Provider(dict):

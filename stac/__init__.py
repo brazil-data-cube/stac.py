@@ -10,7 +10,7 @@
 
 from .stac import STAC
 from .catalog import Catalog
-from .collection import Collection, Provider, Extent, SpatialExtent, TemporalExtent
+from .collection import Collection, Provider, Extent
 from .item import Item, ItemCollection, Geometry
 from .link import Link
 from .version import __version__

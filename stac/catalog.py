@@ -16,11 +16,6 @@ class Catalog(dict):
         return self['stac_version']
 
     @property
-    def stac_extensions(self):
-        """:return: the STAC extensions."""
-        return self['stac_extensions']
-
-    @property
     def id(self):
         """:return: the catalog identifier."""
         return self['id']
@@ -34,11 +29,6 @@ class Catalog(dict):
     def description(self):
         """:return: the catalog description."""
         return self['description']
-
-    @property
-    def summaries(self):
-        """:return: the catalog summaries."""
-        return self['summaries']
 
     @property
     def links(self):
