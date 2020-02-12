@@ -9,7 +9,6 @@
 """Unit-test for STAC operations."""
 
 import os
-import unittest
 from unittest.mock import Mock, patch
 
 import stac
@@ -17,15 +16,15 @@ import stac
 url =  os.environ.get('STAC_SERVER_URL', 'http://localhost')
 
 
-class StacTests(unittest.TestCase):
+class TestStac:
     @classmethod
-    def setUpClass(cls):
+    def setup(cls):
         cls.mock_get_patcher = patch('requests.get')
         cls.mock_get = cls.mock_get_patcher.start()
         cls.s = stac.STAC(url)
 
     @classmethod
-    def tearDownClass(cls):
+    def teardown(cls):
         cls.mock_get_patcher.stop()
 
     def test_stac(self):
@@ -39,7 +38,7 @@ class StacTests(unittest.TestCase):
         self.mock_get.return_value = Mock(status_code=200, headers={'content-type':'application/json'})
         self.mock_get.return_value.json.return_value = conforms
         response = self.s.conformance
-        self.assertEqual(response, conforms)
+        assert response == conforms
 
         catalog = {
             'stac_version':'0.7.0',
@@ -56,7 +55,7 @@ class StacTests(unittest.TestCase):
         self.mock_get.return_value = Mock(status_code=200, headers={'content-type':'application/json'})
         self.mock_get.return_value.json.return_value = catalog
         response = self.s.catalog
-        self.assertEqual(response, set(['my_collection1']))
+        assert response == set(['my_collection1'])
 
         collections = {
                 "stac_version": "0.7.0",
@@ -97,7 +96,7 @@ class StacTests(unittest.TestCase):
         self.mock_get.return_value = Mock(status_code=200, headers={'content-type':'application/json'})
         self.mock_get.return_value.json.return_value = collections
         response = self.s.collections
-        self.assertEqual(response['my_collection1'].title, "my_collection1")
+        assert response['my_collection1'].title == "my_collection1"
 
         collection = stac.Collection({
                 "stac_version": "0.7.0",
@@ -134,7 +133,7 @@ class StacTests(unittest.TestCase):
                     }
                 ]
             })
-        self.assertEqual(self.s.collection('my_collection1'), collection)
+        assert self.s.collection('my_collection1') == collection
 
         items = {
             "type":"FeatureCollection",
@@ -216,7 +215,7 @@ class StacTests(unittest.TestCase):
 
         response = self.s.collection('my_collection1').get_items()
 
-        self.assertEqual(response.features[0].id, 'feature1')
+        assert response.features[0].id == 'feature1'
 
 
 
