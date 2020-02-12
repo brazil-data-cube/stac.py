@@ -2,13 +2,10 @@
 # coding: utf-8
 
 #%%
-
-
-import rasterio
 import numpy as np
-from matplotlib import pyplot
+import rasterio
 import stac
-
+from matplotlib import pyplot
 
 #%%
 
@@ -74,4 +71,3 @@ def normalize(array):
 
 rgb = np.dstack((normalize(r), normalize(g), normalize(b)))
 pyplot.imshow(rgb)
-

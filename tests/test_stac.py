@@ -10,9 +10,9 @@
 
 import os
 import unittest
-from unittest.mock import patch, Mock
-import stac
+from unittest.mock import Mock, patch
 
+import stac
 
 url =  os.environ.get('STAC_SERVER_URL', 'http://localhost')
 

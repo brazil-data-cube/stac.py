@@ -9,8 +9,9 @@
 
 from .catalog import Catalog
 from .collection import Collection
-from .utils import Utils
 from .item import ItemCollection
+from .utils import Utils
+
 
 class STAC:
     """This class implements a Python API client wrapper for STAC.
@@ -35,7 +36,8 @@ class STAC:
     @property
     def catalog(self):
         """
-        Retrieves the available collections in the STAC Catalog.
+        Retrieve the available collections in the STAC Catalog.
+
         :return list of available collections.
         """
         if self._collections is not None:
@@ -53,9 +55,7 @@ class STAC:
 
     @property
     def collections(self):
-        """
-        :return a dict with the STAC Colletion for every available collection.
-        """
+        """:return a dict with the STAC Colletion for every available collection."""
         if self._collections is None:
             self.catalog
 

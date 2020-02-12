@@ -1,9 +1,21 @@
-import requests
+#
+# This file is part of Python Client Library for STAC.
+# Copyright (C) 2019 INPE.
+#
+# Python Client Library for STAC is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+"""STAC Item module."""
+
 import shutil
+
+import requests
+
 from .link import Link
 
+
 class Asset(dict):
-    """Asset object"""
+    """Asset object."""
 
     def __init__(self, data):
         """Initialize instance with dictionary data.
@@ -14,23 +26,24 @@ class Asset(dict):
 
     @property
     def href(self):
-        """:return: the Asset href"""
+        """:return: the Asset href."""
         return self['href']
-    
+
     @property
     def title(self):
-        """:return: the Asset title"""
+        """:return: the Asset title."""
         return self['title']
 
     @property
     def type(self):
-        """:return: the Asset type"""
+        """:return: the Asset type."""
         return self['type']
 
     def download(self, folder_path=None):
         """
-        Downloads the asset to an indicated folder.
-        :param folder_path: Folder path to download the asset, if left None, 
+        Download the asset to an indicated folder.
+
+        :param folder_path: Folder path to download the asset, if left None,
                             the asset will be downloaded to the current
                             working directory.
         :return: path to downloaded file.
@@ -91,7 +104,7 @@ class Item(dict):
     def id(self):
         """:return: the Item identifier."""
         return self['id']
-    
+
     @property
     def type(self):
         """:return: the Item type."""
@@ -135,7 +148,7 @@ class ItemCollection(dict):
         """Initialize instance with dictionary data.
 
         :param data: Dict with Item Collection metadata.
-        """       
+        """
         super(ItemCollection, self).__init__(data or {})
 
     @property
