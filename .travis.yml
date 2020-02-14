@@ -6,6 +6,11 @@ cache:
     directories:
         - $HOME/.cache/pip
 
+branches:
+    only:
+        - master
+        - v0.7
+
 dist: bionic
 
 python:
