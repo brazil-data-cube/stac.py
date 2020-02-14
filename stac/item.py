@@ -39,7 +39,7 @@ class Asset(dict):
         """:return: the Asset type."""
         return self['type']
 
-    def download(self, folder_path=None):
+    def download(self, folder_path=None): # pragma: no cover
         """
         Download the asset to an indicated folder.
 
@@ -96,11 +96,6 @@ class Item(dict):
         return self['stac_version']
 
     @property
-    def stac_extensions(self):
-        """:return: the STAC extensions."""
-        return self['stac_extensions']
-
-    @property
     def id(self):
         """:return: the Item identifier."""
         return self['id']
@@ -123,7 +118,7 @@ class Item(dict):
     @property
     def geometry(self):
         """:return: the Item Geometry."""
-        return self['geometry']
+        return Geometry(self['geometry'])
 
     @property
     def properties(self):

@@ -25,8 +25,8 @@ class STAC:
     def __init__(self, url):
         """Create a STAC client attached to the given host address (an URL)."""
         self._url = url if url[-1] != '/' else url[0:-1]
-        self._collections = None
-        self._catalog = None
+        self._collections = dict()
+        self._catalog = dict()
 
     @property
     def conformance(self):
@@ -40,10 +40,8 @@ class STAC:
 
         :return list of available collections.
         """
-        if self._collections is not None:
+        if len(self._collections) > 0:
             return self._collections.keys()
-
-        self._collections = dict()
 
         url = '{}/stac'.format(self._url)
         self._catalog = Catalog(Utils._get(url))
@@ -56,14 +54,14 @@ class STAC:
     @property
     def collections(self):
         """:return a dict with the STAC Colletion for every available collection."""
-        if self._collections is None:
-            self.catalog
+        if self.catalog:
+            pass
 
         for collection_id in self._collections.keys():
             try:
                 data = Utils._get(f'{self._url}/collections/{collection_id}')
                 self._collections[collection_id] = Collection(data)
-            except:
+            except: # pragma: no cover
                 pass
 
         return self._collections
@@ -84,7 +82,7 @@ class STAC:
             data = Utils._get(f'{self._url}/collections/{collection_id}')
             self._collections[collection_id] = Collection(data)
         except Exception as e:
-            raise Exception(f'Could not retrieve information for collection: {collection_id}')
+            raise KeyError(f'Could not retrieve information for collection: {collection_id}')
         return self._collections[collection_id]
 
 

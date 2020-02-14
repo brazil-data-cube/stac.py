@@ -8,7 +8,7 @@
 """STAC Collection module."""
 
 from .catalog import Catalog
-from .item import ItemCollection
+from .item import Item, ItemCollection
 from .utils import Utils
 
 
@@ -56,7 +56,7 @@ class Provider(dict):
     @property
     def roles(self):
         """:return: the Provider roles."""
-        return self['description']
+        return self['roles']
 
     @property
     def url(self):
@@ -109,7 +109,7 @@ class Collection(Catalog):
         for link in self['links']:
             if link['rel'] == 'items':
                 if item_id is not None:
-                    data = Utils.get(f'{link["href"]}/{item_id}')
+                    data = Utils._get(f'{link["href"]}/{item_id}')
                     return Item(data)
                 data = Utils._get(link['href'], params=filter)
                 return ItemCollection(data)
