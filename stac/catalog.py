@@ -1,4 +1,14 @@
+#
+# This file is part of Python Client Library for STAC.
+# Copyright (C) 2019 INPE.
+#
+# Python Client Library for STAC is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+"""STAC Catalog module."""
+
 from .link import Link
+
 
 class Catalog(dict):
     """The STAC Catalog."""
@@ -16,11 +26,6 @@ class Catalog(dict):
         return self['stac_version']
 
     @property
-    def stac_extensions(self):
-        """:return: the STAC extensions."""
-        return self['stac_extensions']
-
-    @property
     def id(self):
         """:return: the catalog identifier."""
         return self['id']
@@ -34,11 +39,6 @@ class Catalog(dict):
     def description(self):
         """:return: the catalog description."""
         return self['description']
-
-    @property
-    def summaries(self):
-        """:return: the catalog summaries."""
-        return self['summaries']
 
     @property
     def links(self):

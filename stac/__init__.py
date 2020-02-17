@@ -8,11 +8,12 @@
 
 """Python Client Library for STAC."""
 
-from .stac import STAC
 from .catalog import Catalog
-from .collection import Collection, Provider, Extent, SpatialExtent, TemporalExtent
-from .item import Item, ItemCollection, Geometry
+from .collection import Collection, Extent, Provider
+from .item import Geometry, Item, ItemCollection
 from .link import Link
+from .stac import STAC
+from .utils import Utils
 from .version import __version__
 
 __all__ = ('__version__',

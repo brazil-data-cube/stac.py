@@ -1,6 +1,16 @@
+#
+# This file is part of Python Client Library for STAC.
+# Copyright (C) 2019 INPE.
+#
+# Python Client Library for STAC is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+"""STAC Collection module."""
+
 from .catalog import Catalog
-from .item import ItemCollection
+from .item import Item, ItemCollection
 from .utils import Utils
+
 
 class Extent(dict):
     """The Extent object."""
@@ -15,42 +25,12 @@ class Extent(dict):
     @property
     def spatial(self):
         """:return: the spatial extent."""
-        return SpatialExtent(self['spatial'])
+        return self['spatial']
 
     @property
     def temporal(self):
         """:return: the temporal extent."""
-        return TemporalExtent(self['temporal'])
-
-class SpatialExtent(dict):
-    """The Spatial Extent object."""
-
-    def __init__(self, data):
-        """Initialize instance with dictionary data.
-
-        :param data: Dict with Spatial Extent metadata.
-        """
-        super(SpatialExtent, self).__init__(data or {})
-
-    @property
-    def bbox(self):
-        """:return: the bbox of the Spatial Extent."""
-        return self['bbox']
-
-class TemporalExtent(dict):
-    """The Temporal Extent object."""
-
-    def __init__(self, data):
-        """Initialize instance with dictionary data.
-
-        :param data: Dict with Temporal Extent metadata.
-        """
-        super(TemporalExtent, self).__init__(data or {})
-
-    @property
-    def interval(self):
-        """:return: the interval of the Temporal Extent."""
-        return self['interval']
+        return self['temporal']
 
 
 class Provider(dict):
@@ -76,7 +56,7 @@ class Provider(dict):
     @property
     def roles(self):
         """:return: the Provider roles."""
-        return self['description']
+        return self['roles']
 
     @property
     def url(self):
@@ -129,7 +109,7 @@ class Collection(Catalog):
         for link in self['links']:
             if link['rel'] == 'items':
                 if item_id is not None:
-                    data = Utils.get(f'{link["href"]}/{item_id}')
+                    data = Utils._get(f'{link["href"]}/{item_id}')
                     return Item(data)
                 data = Utils._get(link['href'], params=filter)
                 return ItemCollection(data)
