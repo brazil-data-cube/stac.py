@@ -9,7 +9,7 @@ from matplotlib import pyplot
 
 #%%
 
-s = stac.STAC('http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0')
+s = stac.STAC('http://brazildatacube.dpi.inpe.br/bdc-stac/0.7.0')
 
 
 #%%
