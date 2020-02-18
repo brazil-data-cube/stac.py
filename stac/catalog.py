@@ -7,7 +7,12 @@
 #
 """STAC Catalog module."""
 
+import json
+
+from pkg_resources import resource_string
+
 from .link import Link
+from .utils import Utils
 
 
 class Catalog(dict):
@@ -19,6 +24,7 @@ class Catalog(dict):
         :param data: Dict with catalog metadata.
         """
         super(Catalog, self).__init__(data or {})
+        Utils.validate(self)
 
     @property
     def stac_version(self):
@@ -44,3 +50,10 @@ class Catalog(dict):
     def links(self):
         """:return: a list of resources in the catalog."""
         return [Link(link) for link in self['links']]
+
+    @property
+    def _schema(self):
+        """:return: the Catalog jsonschema."""
+        schema = resource_string(__name__, f'jsonschemas/{self.stac_version}/catalog.json')
+        _schema = json.loads(schema)
+        return _schema

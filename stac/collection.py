@@ -6,6 +6,9 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """STAC Collection module."""
+import json
+
+from pkg_resources import resource_string
 
 from .catalog import Catalog
 from .item import Item, ItemCollection
@@ -73,6 +76,7 @@ class Collection(Catalog):
         :param data: Dict with collection metadata.
         """
         super(Collection, self).__init__(data or {})
+        Utils.validate(self)
 
     @property
     def keywords(self):
@@ -103,6 +107,13 @@ class Collection(Catalog):
     def properties(self):
         """:return: the Collection properties."""
         return self['properties']
+
+    @property
+    def _schema(self):
+        """:return: the Collection jsonschema."""
+        schema = resource_string(__name__, f'jsonschemas/{self.stac_version}/collection.json')
+        _schema = json.loads(schema)
+        return _schema
 
     def get_items(self, item_id=None, filter=None):
         """:return: A GeoJSON FeatureCollection of STAC Items from the collection."""

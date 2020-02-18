@@ -7,11 +7,14 @@
 #
 """STAC Item module."""
 
+import json
 import shutil
 
 import requests
+from pkg_resources import resource_string
 
 from .link import Link
+from .utils import Utils
 
 
 class Asset(dict):
@@ -89,11 +92,12 @@ class Item(dict):
         :param data: Dict with Item metadata.
         """
         super(Item, self).__init__(data or {})
+        Utils.validate(self)
 
     @property
     def stac_version(self):
         """:return: the STAC version."""
-        return self['stac_version']
+        return self['stac_version'] if 'stac_version' in self else '0.7.0'
 
     @property
     def id(self):
@@ -135,6 +139,12 @@ class Item(dict):
         """:return: the Item related assets."""
         return {key: Asset(value) for key,value in self['assets'].items()}
 
+    @property
+    def _schema(self):
+        """:return: the Collection jsonschema."""
+        schema = resource_string(__name__, f'jsonschemas/{self.stac_version}/item.json')
+        _schema = json.loads(schema)
+        return _schema
 
 class ItemCollection(dict):
     """The GeoJSON Feature Collection of STAC Items."""
