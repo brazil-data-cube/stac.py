@@ -10,9 +10,10 @@
 
 
 import os
+from unittest.mock import Mock, patch
+
 import pytest
 import requests
-from unittest.mock import Mock, patch
 
 import stac
 
@@ -54,7 +55,7 @@ class TestStac:
             "http://www.opengis.net/spec/wfs-1/3.0/req/geojson"]
         }
 
-        cls.catalog = stac.Catalog({
+        cls.catalog = {
             'title':'my_catalog title',
             'stac_version':'0.7.0',
             'id':'stac',
@@ -67,10 +68,10 @@ class TestStac:
                     'type': 'application/json'
                 }
             ]
-        })
+        }
 
 
-        cls.collection = stac.Collection({
+        cls.collection = {
                 "stac_version": "0.7.0",
                 "id": "my_collection1",
                 "title": "my_collection1",
@@ -96,7 +97,7 @@ class TestStac:
                     {
                         "name":"my_provider",
                         "description": "my_provider_description",
-                        "roles": "my_provider_role",
+                        "roles": ["producer"],
                         "url": "my_provider_url"
                     }
                 ],
@@ -112,14 +113,15 @@ class TestStac:
                         "href": f"{url}/collections/my_collection1/items"
                     }
                 ]
-            })
+            }
 
-        cls.items = stac.ItemCollection({
+        cls.items = {
             "type":"FeatureCollection",
             "features":[
                     {"type": "Feature",
                      "stac_version": "0.7.0",
                     "id": "feature1",
+                    "description": "aaa",
                     "bbox": [-122.59750209, 37.48803556, -122.2880486, 37.613537207],
                     "geometry": {
                         "type": "Polygon",
@@ -191,7 +193,7 @@ class TestStac:
                     }
                 }
             ]
-        })
+        }
 
     @classmethod
     def teardown(cls):
@@ -300,16 +302,18 @@ class TestStac:
         response = self.s.collections
 
         self.mock_get.return_value = Mock(status_code=200, headers={'content-type':'application/json'})
-        self.mock_get.return_value.json.return_value = self.items.features[0]
+        self.mock_get.return_value.json.return_value = self.items['features'][0]
 
         response = self.s.collection('my_collection1').get_items(item_id='feature1')
         assert response.id == 'feature1'
 
     def test_item_empty(self):
         self.mock_get.return_value = Mock(status_code=200, headers={'content-type':'application/json'})
-        self.mock_get.return_value.json.return_value = self.items.features[0]
-
+        self.mock_get.return_value.json.return_value = self.collection
         collection = self.s.collection('my_collection1')
+
+        self.mock_get.return_value = Mock(status_code=200, headers={'content-type':'application/json'})
+        self.mock_get.return_value.json.return_value = self.items['features'][0]
         collection['links'].pop(1)
         assert collection.get_items() == stac.ItemCollection({})
 
