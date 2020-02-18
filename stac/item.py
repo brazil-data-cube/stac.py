@@ -86,13 +86,16 @@ class Geometry(dict):
 class Item(dict):
     """The GeoJSON Feature of a STAC Item."""
 
-    def __init__(self, data):
+    def __init__(self, data, validate=False):
         """Initialize instance with dictionary data.
 
         :param data: Dict with Item metadata.
+        :param validate: true if the Item should be validate using its jsonschema. Default is False.
         """
+        self._validate = validate
         super(Item, self).__init__(data or {})
-        Utils.validate(self)
+        if self._validate:
+            Utils.validate(self)
 
     @property
     def stac_version(self):
@@ -149,11 +152,13 @@ class Item(dict):
 class ItemCollection(dict):
     """The GeoJSON Feature Collection of STAC Items."""
 
-    def __init__(self, data):
+    def __init__(self, data, validate=False):
         """Initialize instance with dictionary data.
 
         :param data: Dict with Item Collection metadata.
+        :param validate: true if the Item Collection should be validate using its jsonschema. Default is False.
         """
+        self._validate = validate
         super(ItemCollection, self).__init__(data or {})
 
     @property
@@ -164,4 +169,4 @@ class ItemCollection(dict):
     @property
     def features(self):
         """:return: the Item Collection list of GeoJSON Features."""
-        return [Item(i) for i in self['features']]
+        return [Item(i, self._validate) for i in self['features']]

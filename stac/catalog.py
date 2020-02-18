@@ -18,13 +18,16 @@ from .utils import Utils
 class Catalog(dict):
     """The STAC Catalog."""
 
-    def __init__(self, data):
+    def __init__(self, data, validate=False):
         """Initialize instance with dictionary data.
 
         :param data: Dict with catalog metadata.
+        :param validate: true if the Catalog should be validate using its jsonschema. Default is False.
         """
+        self._validate = validate
         super(Catalog, self).__init__(data or {})
-        Utils.validate(self)
+        if self._validate:
+            Utils.validate(self)
 
     @property
     def stac_version(self):

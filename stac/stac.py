@@ -22,11 +22,12 @@ class STAC:
     :type url: str
     """
 
-    def __init__(self, url):
+    def __init__(self, url, validate=False):
         """Create a STAC client attached to the given host address (an URL)."""
         self._url = url if url[-1] != '/' else url[0:-1]
         self._collections = dict()
         self._catalog = dict()
+        self._validate = validate
 
     @property
     def conformance(self):
@@ -44,7 +45,7 @@ class STAC:
             return self._collections.keys()
 
         url = '{}/stac'.format(self._url)
-        self._catalog = Catalog(Utils._get(url))
+        self._catalog = Catalog(Utils._get(url), self._validate)
 
         for i in self._catalog.links:
             if i.rel == 'child':
@@ -60,7 +61,7 @@ class STAC:
         for collection_id in self._collections.keys():
             try:
                 data = Utils._get(f'{self._url}/collections/{collection_id}')
-                self._collections[collection_id] = Collection(data)
+                self._collections[collection_id] = Collection(data, self._validate)
             except: # pragma: no cover
                 pass
 
@@ -80,7 +81,7 @@ class STAC:
             return self._collections[collection_id]
         try:
             data = Utils._get(f'{self._url}/collections/{collection_id}')
-            self._collections[collection_id] = Collection(data)
+            self._collections[collection_id] = Collection(data, self._validate)
         except Exception as e:
             raise KeyError(f'Could not retrieve information for collection: {collection_id}')
         return self._collections[collection_id]
@@ -97,7 +98,7 @@ class STAC:
         """
         url = '{}/stac/search'.format(self._url)
         data = Utils._get(url, params=filter)
-        return ItemCollection(data)
+        return ItemCollection(data, self._validate)
 
     @property
     def url(self):

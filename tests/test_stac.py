@@ -46,7 +46,7 @@ class TestStac:
         cls.mock_get = cls.mock_get_patcher.start()
         cls.mock_get.return_value = Mock(status_code=200, headers={'content-type':'application/json'})
 
-        cls.s = stac.STAC(url)
+        cls.s = stac.STAC(url, True)
 
         cls.conforms = {"conformsTo":
             ["http://www.opengis.net/spec/wfs-1/3.0/req/core",
