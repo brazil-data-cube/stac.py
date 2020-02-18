@@ -38,7 +38,7 @@ examples_require = [
 
 extras_require = {
     'docs': docs_require,
-    'examples': examples_require
+    'examples': examples_require,
     'tests': tests_require,
 }
 
