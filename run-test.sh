@@ -8,7 +8,7 @@
 #
 
 pydocstyle stac && \
-isort --check-only --diff --recursive **/*.py && \
+isort --check-only --diff --recursive stac/*.py && \
 check-manifest --ignore ".travis-*" --ignore ".readthedocs.*" && \
 pytest && \
 sphinx-build -qnW --color -b doctest doc/sphinx/ doc/sphinx/_build/doctest
