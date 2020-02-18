@@ -9,7 +9,7 @@ cache:
 branches:
     only:
         - master
-        - v0.7
+        - b-0.7.0
 
 dist: bionic
 

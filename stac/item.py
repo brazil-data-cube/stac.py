@@ -7,11 +7,14 @@
 #
 """STAC Item module."""
 
+import json
 import shutil
 
 import requests
+from pkg_resources import resource_string
 
 from .link import Link
+from .utils import Utils
 
 
 class Asset(dict):
@@ -83,17 +86,21 @@ class Geometry(dict):
 class Item(dict):
     """The GeoJSON Feature of a STAC Item."""
 
-    def __init__(self, data):
+    def __init__(self, data, validate=False):
         """Initialize instance with dictionary data.
 
         :param data: Dict with Item metadata.
+        :param validate: true if the Item should be validate using its jsonschema. Default is False.
         """
+        self._validate = validate
         super(Item, self).__init__(data or {})
+        if self._validate:
+            Utils.validate(self)
 
     @property
     def stac_version(self):
         """:return: the STAC version."""
-        return self['stac_version']
+        return self['stac_version'] if 'stac_version' in self else '0.7.0'
 
     @property
     def id(self):
@@ -135,15 +142,23 @@ class Item(dict):
         """:return: the Item related assets."""
         return {key: Asset(value) for key,value in self['assets'].items()}
 
+    @property
+    def _schema(self):
+        """:return: the Collection jsonschema."""
+        schema = resource_string(__name__, f'jsonschemas/{self.stac_version}/item.json')
+        _schema = json.loads(schema)
+        return _schema
 
 class ItemCollection(dict):
     """The GeoJSON Feature Collection of STAC Items."""
 
-    def __init__(self, data):
+    def __init__(self, data, validate=False):
         """Initialize instance with dictionary data.
 
         :param data: Dict with Item Collection metadata.
+        :param validate: true if the Item Collection should be validate using its jsonschema. Default is False.
         """
+        self._validate = validate
         super(ItemCollection, self).__init__(data or {})
 
     @property
@@ -154,4 +169,4 @@ class ItemCollection(dict):
     @property
     def features(self):
         """:return: the Item Collection list of GeoJSON Features."""
-        return [Item(i) for i in self['features']]
+        return [Item(i, self._validate) for i in self['features']]

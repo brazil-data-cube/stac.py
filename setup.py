@@ -30,9 +30,15 @@ tests_require = [
     'check-manifest>=0.40'
 ]
 
+examples_require = [
+    'matplotlib==3.1.3',
+    'numpy==1.18.1'
+    'rasterio==1.1.2',
+]
+
 extras_require = {
     'docs': docs_require,
-    'oauth': [ 'requests_oauthlib>=1.3' ],
+    'examples': examples_require,
     'tests': tests_require,
 }
 
@@ -45,7 +51,7 @@ setup_requires = [
 install_requires = [
     'Click>=7.0',
     'requests>=2.20',
-
+    'jsonschema==3.2.0'
 ]
 
 packages = find_packages()

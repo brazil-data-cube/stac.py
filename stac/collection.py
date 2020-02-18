@@ -6,6 +6,9 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """STAC Collection module."""
+import json
+
+from pkg_resources import resource_string
 
 from .catalog import Catalog
 from .item import Item, ItemCollection
@@ -67,12 +70,16 @@ class Provider(dict):
 class Collection(Catalog):
     """The STAC Collection."""
 
-    def __init__(self, data):
+    def __init__(self, data, validate=False):
         """Initialize instance with dictionary data.
 
         :param data: Dict with collection metadata.
+        :param validate: true if the Collection should be validate using its jsonschema. Default is False.
         """
+        self._validate = validate
         super(Collection, self).__init__(data or {})
+        if self._validate:
+            Utils.validate(self)
 
     @property
     def keywords(self):
@@ -104,13 +111,20 @@ class Collection(Catalog):
         """:return: the Collection properties."""
         return self['properties']
 
+    @property
+    def _schema(self):
+        """:return: the Collection jsonschema."""
+        schema = resource_string(__name__, f'jsonschemas/{self.stac_version}/collection.json')
+        _schema = json.loads(schema)
+        return _schema
+
     def get_items(self, item_id=None, filter=None):
         """:return: A GeoJSON FeatureCollection of STAC Items from the collection."""
         for link in self['links']:
             if link['rel'] == 'items':
                 if item_id is not None:
                     data = Utils._get(f'{link["href"]}/{item_id}')
-                    return Item(data)
+                    return Item(data, self._validate)
                 data = Utils._get(link['href'], params=filter)
                 return ItemCollection(data)
         return ItemCollection({})

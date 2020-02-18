@@ -6,8 +6,13 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Utility data structures and algorithms."""
-import requests
+import json
 
+import requests
+from jsonschema import RefResolver, validate
+from pkg_resources import resource_filename, resource_string
+
+base_schemas_path = resource_filename(__name__, 'jsonschemas/')
 
 class Utils:
     """Utils STAC object."""
@@ -37,3 +42,14 @@ class Utils:
             raise ValueError('HTTP response is not JSON: Content-Type: {}'.format(content_type))
 
         return response.json()
+
+
+    @staticmethod
+    def validate(stac_object):
+        """Validate a STAC Object using its jsonschema.
+        
+        :raise ValidationError: raise a ValidationError if the STAC Object couldn't be validated.
+        """
+        resolver = RefResolver(f'file://{base_schemas_path}{stac_object.stac_version}/', None)
+
+        validate(stac_object, stac_object._schema, resolver=resolver)
