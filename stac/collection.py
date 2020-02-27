@@ -77,7 +77,7 @@ class Collection(Catalog):
         :param validate: true if the Collection should be validate using its jsonschema. Default is False.
         """
         self._validate = validate
-        super(Collection, self).__init__(data or {})
+        super(Collection, self).__init__(data or {}, validate)
         if self._validate:
             Utils.validate(self)
 
