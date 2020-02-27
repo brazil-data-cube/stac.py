@@ -15,13 +15,11 @@ Installation
 Production installation
 -----------------------
 
-**Under Development!**
+Install from GitHub:
 
-.. Install from `PyPI <https://pypi.org/>`_:
-..
-.. .. code-block:: shell
-..
-..     $ pip3 install stac.py
+.. code-block:: shell
+
+        $ pip3 install git+https://github.com/brazil-data-cube/stac.py@b-0.7.0
 
 
 Development installation

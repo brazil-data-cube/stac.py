@@ -1,6 +1,19 @@
+#
+# This file is part of Python Client Library for STAC.
+# Copyright (C) 2019 INPE.
+#
+# Python Client Library for STAC is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+"""STAC Collection module."""
+import json
+
+from pkg_resources import resource_string
+
 from .catalog import Catalog
-from .item import ItemCollection
+from .item import Item, ItemCollection
 from .utils import Utils
+
 
 class Extent(dict):
     """The Extent object."""
@@ -15,42 +28,12 @@ class Extent(dict):
     @property
     def spatial(self):
         """:return: the spatial extent."""
-        return SpatialExtent(self['spatial'])
+        return self['spatial']
 
     @property
     def temporal(self):
         """:return: the temporal extent."""
-        return TemporalExtent(self['temporal'])
-
-class SpatialExtent(dict):
-    """The Spatial Extent object."""
-
-    def __init__(self, data):
-        """Initialize instance with dictionary data.
-
-        :param data: Dict with Spatial Extent metadata.
-        """
-        super(SpatialExtent, self).__init__(data or {})
-
-    @property
-    def bbox(self):
-        """:return: the bbox of the Spatial Extent."""
-        return self['bbox']
-
-class TemporalExtent(dict):
-    """The Temporal Extent object."""
-
-    def __init__(self, data):
-        """Initialize instance with dictionary data.
-
-        :param data: Dict with Temporal Extent metadata.
-        """
-        super(TemporalExtent, self).__init__(data or {})
-
-    @property
-    def interval(self):
-        """:return: the interval of the Temporal Extent."""
-        return self['interval']
+        return self['temporal']
 
 
 class Provider(dict):
@@ -76,7 +59,7 @@ class Provider(dict):
     @property
     def roles(self):
         """:return: the Provider roles."""
-        return self['description']
+        return self['roles']
 
     @property
     def url(self):
@@ -87,12 +70,16 @@ class Provider(dict):
 class Collection(Catalog):
     """The STAC Collection."""
 
-    def __init__(self, data):
+    def __init__(self, data, validate=False):
         """Initialize instance with dictionary data.
 
         :param data: Dict with collection metadata.
+        :param validate: true if the Collection should be validate using its jsonschema. Default is False.
         """
-        super(Collection, self).__init__(data or {})
+        self._validate = validate
+        super(Collection, self).__init__(data or {}, validate)
+        if self._validate:
+            Utils.validate(self)
 
     @property
     def keywords(self):
@@ -124,13 +111,20 @@ class Collection(Catalog):
         """:return: the Collection properties."""
         return self['properties']
 
+    @property
+    def _schema(self):
+        """:return: the Collection jsonschema."""
+        schema = resource_string(__name__, f'jsonschemas/{self.stac_version}/collection.json')
+        _schema = json.loads(schema)
+        return _schema
+
     def get_items(self, item_id=None, filter=None):
         """:return: A GeoJSON FeatureCollection of STAC Items from the collection."""
         for link in self['links']:
             if link['rel'] == 'items':
                 if item_id is not None:
-                    data = Utils.get(f'{link["href"]}/{item_id}')
-                    return Item(data)
+                    data = Utils._get(f'{link["href"]}/{item_id}')
+                    return Item(data, self._validate)
                 data = Utils._get(link['href'], params=filter)
                 return ItemCollection(data)
         return ItemCollection({})

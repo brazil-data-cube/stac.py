@@ -2,17 +2,14 @@
 # coding: utf-8
 
 #%%
-
-
-import rasterio
 import numpy as np
-from matplotlib import pyplot
+import rasterio
 import stac
-
+from matplotlib import pyplot
 
 #%%
 
-s = stac.STAC('http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0')
+s = stac.STAC('http://brazildatacube.dpi.inpe.br/bdc-stac/0.7.0')
 
 
 #%%
@@ -74,4 +71,3 @@ def normalize(array):
 
 rgb = np.dstack((normalize(r), normalize(g), normalize(b)))
 pyplot.imshow(rgb)
-
