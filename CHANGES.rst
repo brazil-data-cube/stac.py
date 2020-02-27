@@ -19,6 +19,7 @@ Released 2020-02-27
 - Support for STAC version 0.7.0.
 - Documentation system based on Sphinx.
 - Documentation integrated to ``Read the Docs``.
+- Unit-tests with code coverage.
 - Package support through Setuptools.
 - Installation and use instructions.
 - Source code versioning based on `Semantic Versioning 2.0.0 <https://semver.org/>`_.

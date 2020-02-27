@@ -43,6 +43,12 @@ Python Client Library for STAC
         :alt: Join the chat
 
 
+About
+=====
+
+``stac.py`` is a Python client API for the `SpatioTemporal Asset Catalog (STAC) specification <https://github.com/radiantearth/stac-spec>`_. The client library only supports version ``0.7.0`` of the STAC API. Nevertheless, we aim to support new versions of the API in future releases of ``stac.py``. See the `milestones <https://github.com/brazil-data-cube/stac.py/milestones>`_ to get the list of versions planned in each release.
+
+
 Installation
 ============
 
