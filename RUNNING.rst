@@ -9,8 +9,9 @@
 Running STAC Client in the Command Line
 =======================================
 
-.. code-block:: shell
+**Under Development!!!**
 
-        stac conformance --url http://localhost/
-
+.. .. code-block:: shell
+..
+..         stac conformance --url http://localhost/
 

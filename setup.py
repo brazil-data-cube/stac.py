@@ -39,11 +39,11 @@ examples_require = [
 extras_require = {
     'docs': docs_require,
     'examples': examples_require,
-    'oauth': [ 'requests_oauthlib>=1.3' ],
+    'oauth': ['requests_oauthlib>=1.3'],
     'tests': tests_require,
 }
 
-extras_require['all'] = [ req for exts, reqs in extras_require.items() for req in reqs ]
+extras_require['all'] = [req for exts, reqs in extras_require.items() for req in reqs]
 
 setup_requires = [
     'pytest-runner>=5.2',

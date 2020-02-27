@@ -14,25 +14,39 @@ Python Client Library for STAC
         :target: https://github.com//brazil-data-cube/stac.py/blob/master/LICENSE
         :alt: Software License
 
-.. image:: https://travis-ci.org/brazil-data-cube/stac.py.svg?branch=v0.7
-        :target: https://travis-ci.org/brazil-data-cube/stac.py
+.. image:: https://travis-ci.com/brazil-data-cube/stac.py.svg?branch=b-0.7.0
+        :target: https://travis-ci.com/brazil-data-cube/stac.py
         :alt: Build Status
 
 .. .. image:: https://img.shields.io/badge/tests-0%20passed,%200%20failed-critical
 ..         :target: https://travis-ci.org/brazil-data-cube/stac.py
 ..         alt: Tests
 
-.. image:: https://coveralls.io/repos/github/brazil-data-cube/stac.py/badge.svg?branch=v0.7
-        :target: https://coveralls.io/github/brazil-data-cube/stac.py?branch=v0.7
+.. image:: https://coveralls.io/repos/github/brazil-data-cube/stac.py/badge.svg?branch=b-0.7.0
+        :target: https://coveralls.io/github/brazil-data-cube/stac.py?branch=b-0.7.0
         :alt: Code Coverage Test
 
-.. image:: https://readthedocs.org/projects/stacpy/badge/?version=latest
-        :target: https://stacpy.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/stacpy/badge/?version=b-0.7.0
+        :target: https://stacpy.readthedocs.io/en/b-0.7.0/
         :alt: Documentation Status
 
 .. image:: https://img.shields.io/badge/lifecycle-experimental-orange.svg
         :target: https://www.tidyverse.org/lifecycle/#experimental
         :alt: Software Life Cycle
+
+.. image:: https://img.shields.io/github/tag/brazil-data-cube/stac.py.svg
+        :target: https://github.com/brazil-data-cube/stac.py/releases
+        :alt: Release
+
+.. image:: https://badges.gitter.im/brazil-data-cube/community.png
+        :target: https://gitter.im/brazil-data-cube/community#
+        :alt: Join the chat
+
+
+About
+=====
+
+``stac.py`` is a Python client API for the `SpatioTemporal Asset Catalog (STAC) specification <https://github.com/radiantearth/stac-spec>`_. The client library only supports version ``0.7.0`` of the STAC API. Nevertheless, we aim to support new versions of the API in future releases of ``stac.py``. See the `milestones <https://github.com/brazil-data-cube/stac.py/milestones>`_ to get the list of versions planned in each release.
 
 
 Installation

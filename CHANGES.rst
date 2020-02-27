@@ -10,4 +10,17 @@
 Changes
 =======
 
-**Under Development!**
+Version 0.7.0-0
+---------------
+
+Released 2020-02-27
+
+- First experimental version.
+- Support for STAC version 0.7.0.
+- Documentation system based on Sphinx.
+- Documentation integrated to ``Read the Docs``.
+- Unit-tests with code coverage.
+- Package support through Setuptools.
+- Installation and use instructions.
+- Source code versioning based on `Semantic Versioning 2.0.0 <https://semver.org/>`_.
+- License: `MIT <https://raw.githubusercontent.com/brazil-data-cube/stac.py/b-0.7.0/LICENSE>`_.
