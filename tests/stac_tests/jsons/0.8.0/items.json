@@ -1,5 +1,11 @@
 {
     "type":"FeatureCollection",
+    "links": [
+        {
+            "href":"http://localhost/collection/my_collection1/items",
+            "rel":"self"
+        }
+    ],
     "features":[
             {"type": "Feature",
              "stac_version": "0.8.0",
@@ -16,7 +22,19 @@
                     [-122.308150179, 37.488035566]]]
             },
             "properties": {
-                "datetime": "2016-05-03T13:21:30.040Z"
+                "datetime": "2016-05-03T13:21:30.040Z",
+                "license":"MIT",
+                "providers":[
+                    {
+                    "name":"my_provider",
+                    "description": "my_provider_description",
+                    "roles": ["producer"],
+                    "url": "my_provider_url"
+                    }
+                ],
+                "title":"my_item",
+                "updated":"2016-05-03T13:21:30.040Z",
+                "created":"2016-05-03T13:21:30.040Z"
             },
             "collection": "my_collection1",
             "links": [
@@ -54,7 +72,19 @@
                 ]
             },
             "properties": {
-                "datetime": "2016-05-10T13:21:30.040Z"
+                "datetime": "2016-05-03T13:21:30.040Z",
+                "license":"MIT",
+                "providers":[
+                    {
+                    "name":"my_provider",
+                    "description": "my_provider_description",
+                    "roles": ["producer"],
+                    "url": "my_provider_url"
+                    }
+                ],
+                "title":"my_item2",
+                "updated":"2016-05-03T13:21:30.040Z",
+                "created":"2016-05-03T13:21:30.040Z"
             },
             "collection": "my_collection1",
             "links": [
