@@ -10,8 +10,8 @@
 
 from .catalog import Catalog
 from .collection import Collection, Extent, Provider
-from .item import Geometry, Item, ItemCollection
 from .common import Link
+from .item import Geometry, Item, ItemCollection
 from .stac import STAC
 from .utils import Utils
 from .version import __version__

@@ -84,6 +84,7 @@ class Geometry(dict):
 
 class Properties(dict):
     """The Properties Object."""
+    
     def __init__(self, data):
         """Initialize instance with dictionary data.
 

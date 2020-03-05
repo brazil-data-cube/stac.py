@@ -6,8 +6,9 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Python API client wrapper for STAC."""
-from requests import HTTPError
 import warnings
+
+from requests import HTTPError
 
 from .catalog import Catalog
 from .collection import Collection

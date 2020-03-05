@@ -11,15 +11,17 @@ import json
 from pkg_resources import resource_string
 
 from .catalog import Catalog
-from .item import Item, ItemCollection
 from .common import Provider
+from .item import Item, ItemCollection
 from .utils import Utils
 
 
 class Stats(dict):
-    """The Stats object"""
+    """The Stats object."""
+
     def __init__(self, data):
         """Initialize instance with dictionary data.
+
         :param data: Dict with Stats metadata.
         """
         super(Stats, self).__init__(data or {})
@@ -39,6 +41,7 @@ class SpatialExtent(dict):
 
     def __init__(self, data):
         """Initialize instance with dictionary data.
+
         :param data: Dict with Spatial Extent metadata.
         """
         super(SpatialExtent, self).__init__(data or {})
@@ -53,6 +56,7 @@ class TemporalExtent(dict):
 
     def __init__(self, data):
         """Initialize instance with dictionary data.
+
         :param data: Dict with Temporal Extent metadata.
         """
         super(TemporalExtent, self).__init__(data or {})
@@ -133,6 +137,7 @@ class Collection(Catalog):
 
     @property
     def summaries(self):
+        """:return: the Collection summaries."""
         return {k: Stats(v) for k, v in self['summaries'].items()}
 
     @property
@@ -143,7 +148,8 @@ class Collection(Catalog):
         return _schema
 
     def get_items(self, item_id=None, filter=None):
-        """
+        """Retrieve items of the collection.
+
         :param item_id: (optional) a str with a STAC Item id.
         :type item_id: str
 
