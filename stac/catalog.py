@@ -11,7 +11,7 @@ import json
 
 from pkg_resources import resource_string
 
-from .link import Link
+from .common import Link
 from .utils import Utils
 
 

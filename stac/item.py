@@ -13,7 +13,7 @@ import shutil
 import requests
 from pkg_resources import resource_string
 
-from .link import Link
+from .common import Link, Provider
 from .utils import Utils
 
 
@@ -82,6 +82,44 @@ class Geometry(dict):
         """:return: the Geometry coordinates."""
         return self['coordinates']
 
+class Properties(dict):
+    """The Properties Object."""
+    def __init__(self, data):
+        """Initialize instance with dictionary data.
+
+        :param data: Dict with Properties metadata.
+        """
+        super(Properties, self).__init__(data or {})
+
+    @property
+    def datetime(self):
+        """:return: the datetime property."""
+        return self['datetime']
+
+    @property
+    def license(self):
+        """:return: the license property."""
+        return self['license']
+
+    @property
+    def providers(self):
+        """:return: the providers property."""
+        return [Provider(p) for p in self['providers']]
+
+    @property
+    def title(self):
+        """:return: the title property."""
+        return self['title']
+
+    @property
+    def created(self):
+        """:return: the created property."""
+        return self['created']
+
+    @property
+    def updated(self):
+        """:return: the updated property."""
+        return self['updated']
 
 class Item(dict):
     """The GeoJSON Feature of a STAC Item."""
@@ -130,7 +168,7 @@ class Item(dict):
     @property
     def properties(self):
         """:return: the Item properties."""
-        return self['properties']
+        return Properties(self['properties'])
 
     @property
     def links(self):
@@ -170,3 +208,8 @@ class ItemCollection(dict):
     def features(self):
         """:return: the Item Collection list of GeoJSON Features."""
         return [Item(i, self._validate) for i in self['features']]
+
+    @property
+    def links(self):
+        """:return: the Item Collection list of GeoJSON Features."""
+        return [Link(i) for i in self['links']]
