@@ -1,0 +1,43 @@
+{
+    "stac_version": "0.7.0",
+    "id": "my_collection1",
+    "title": "my_collection1",
+    "description": "my_collection1",
+    "version":"0.1.0",
+    "keywords": [
+    "landsat"
+    ],
+    "extent":{
+        "spatial": [
+            -180,
+            -90,
+            180,
+            90
+        ],
+    "temporal":
+        [
+            "2013-06-01T00:00:00Z",
+            null
+        ]
+    },
+    "providers": [
+        {
+            "name":"my_provider",
+            "description": "my_provider_description",
+            "roles": ["producer"],
+            "url": "my_provider_url"
+        }
+    ],
+    "license": "MIT",
+    "properties": {"datetime": "2000-01-01"},
+    "links": [
+        {
+            "rel": "self",
+            "href": "http://localhost/collections/my_collection1"
+        },
+        {
+            "rel": "items",
+            "href": "http://localhost/collections/my_collection1/items"
+        }
+    ]
+}
