@@ -278,7 +278,12 @@ class TestCli:
                               status_code=200,
                               headers={'content-type':'application/json'})
 
-            result = runner.invoke(stac.cli.items, ['--url', url, '--collection-id', 'my_collection1'])
+            result = runner.invoke(stac.cli.items, ['--url', url,
+                                                    '--collection-id', 'my_collection1',
+                                                    '--limit', 1,
+                                                    '--page', 1,
+                                                    '--datetime','2016-05-03/2019-01-01',
+                                                    '--bbox','-180,-90,180,90'])
             assert result.exit_code == 0
             assert 'feature1' in result.output
 
@@ -296,8 +301,19 @@ class TestCli:
             requests_mock.get(re.compile(url+'/stac/search'), json=stac_objects[k]['items.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
+            intersects = json.dumps(stac_objects[k]['items.json']['features'][0]['geometry'])
 
-            result = runner.invoke(stac.cli.search, ['--url', url])
+            result = runner.invoke(stac.cli.search, ['--url', url,
+                                                    '--collections', 'my_collection1',
+                                                    '--ids', 'feature1',
+                                                    '--intersects', intersects,
+                                                    '--limit', 1,
+                                                    '--next', 'aaa',
+                                                    '--page', 1,
+                                                    '--datetime','2016-05-03/2019-01-01',
+                                                    '--bbox','-180,-90,180,90'
+                                                    ])
+
             assert result.exit_code == 0
             assert 'feature1' in result.output
 

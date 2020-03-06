@@ -13,20 +13,11 @@ import click
 
 from .stac import STAC
 
+
 @click.group()
 def cli():
     """STAC on command line."""
-    pass
-
-@click.command()
-@click.option('--url', default=None, help='The STAC server address (an URL).')
-def conformance(url):
-    """Return the list of conformance classes that the server conforms to."""
-    service = STAC(url)
-
-    retval = service.conformance()
-
-    click.echo(json.dumps(retval))
+    pass #pragma: no cover
 
 @click.command()
 @click.option('--url', default=None, help='The STAC server address (an URL).')
@@ -88,7 +79,7 @@ def items(url, collection_id, limit, page, datetime, bbox):
 @click.option('--intersects', default=None, help='Searches items by performing intersection between their '\
                                                  'geometry and provided GeoJSON Feature')
 @click.option('--limit', default=10, help='The maximum number of results to return (page size). Defaults to 10')
-@click.option('--next', default=1, help='The token to retrieve the next set of results, e.g., '\
+@click.option('--next', default=None, help='The token to retrieve the next set of results, e.g., '\
                                         'offset, page, continuation token. (STAC 0.8.x only)')
 @click.option('--page', default=1, help='The page number of results. Defaults to 1. (STAC 0.7.0 only)')
 @click.option('--datetime', help='Single date, date+time, or a range (\'/\' seperator), formatted to RFC 3339, section 5.6')
@@ -100,7 +91,6 @@ def search(url, collections, ids, intersects, limit, next, page, datetime, bbox)
 
     filter = {
         'limit': limit,
-        'page': page
     }
 
     if service._catalog.stac_version == '0.8.0':
@@ -111,6 +101,7 @@ def search(url, collections, ids, intersects, limit, next, page, datetime, bbox)
     elif service._catalog.stac_version == '0.7.0':
         if datetime is not None:
             filter['time'] = datetime
+
 
     if bbox is not None:
         filter['bbox'] = bbox
@@ -125,7 +116,6 @@ def search(url, collections, ids, intersects, limit, next, page, datetime, bbox)
 
     print(json.dumps(retval, indent=2))
 
-cli.add_command(conformance)
 cli.add_command(catalog)
 cli.add_command(collection)
 cli.add_command(items)
