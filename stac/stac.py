@@ -53,7 +53,7 @@ class STAC:
         for i in self._catalog.links:
             if i.rel == 'child':
                 self._collections[i.href.split('/')[-1]] = None
-        return self._collections.keys()
+        return list(self._collections.keys())
 
     @property
     def collections(self):
