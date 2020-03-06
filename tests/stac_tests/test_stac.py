@@ -10,26 +10,18 @@
 import json
 import os
 import re
-
 from pathlib import Path
 from pkg_resources import resource_filename, resource_string
 
 import pytest
 import requests
 import stac
+from click.testing import CliRunner
 
 url = os.environ.get('STAC_SERVER_URL', 'http://localhost')
 match_url = re.compile(url)
 
-class TestUtils:
-    def test_ok(self, requests_mock):
-        requests_mock.get(match_url, json={"key":"value"}, status_code=200, headers={'content-type':'application/json'})
-        stac.Utils._get(url)
 
-    def test_error(self, requests_mock):
-        requests_mock.get(match_url, json={"key":"value"}, status_code=200, headers={'content-type':'text/plain'})
-        with pytest.raises(ValueError):
-            stac.Utils._get(url)
 
 @pytest.fixture
 def requests_mock(requests_mock):
@@ -52,6 +44,22 @@ def stac_objects():
             files[s[-2]] = {s[-1]: file}
 
     return files
+
+@pytest.fixture(scope='module')
+def runner():
+    return CliRunner()
+
+class TestUtils:
+    def test_ok(self, requests_mock):
+        requests_mock.get(match_url, json={"key":"value"}, status_code=200, headers={'content-type':'application/json'})
+        stac.Utils._get(url)
+
+    def test_error(self, requests_mock):
+        requests_mock.get(match_url, json={"key":"value"}, status_code=200, headers={'content-type':'text/plain'})
+        with pytest.raises(ValueError):
+            stac.Utils._get(url)
+
+
 
 class TestStac:
     def test_stac(self):
@@ -77,7 +85,7 @@ class TestStac:
             assert s._catalog.links[0].title
             assert s._catalog.links[0].href
             assert s._catalog.links[0].rel
-            assert response == set(['my_collection1'])
+            assert response == ['my_collection1']
 
     def test_collection(self, stac_objects, requests_mock):
         for k in stac_objects:
@@ -227,6 +235,72 @@ class TestStac:
             response = s.search()
 
             assert response.features[0].id == 'feature1'
+
+class TestCli:
+    def test_catalog(self, stac_objects, requests_mock, runner):
+        for k in stac_objects:
+            s = stac.STAC(url, True)
+            requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            result = runner.invoke(stac.cli.catalog, ['--url', url])
+            assert result.exit_code == 0
+            assert 'my_collection1' in result.output
+
+    def test_collection(self, stac_objects, requests_mock, runner):
+        for k in stac_objects:
+            s = stac.STAC(url, True)
+            requests_mock.get(re.compile(url+'/stac'), json=stac_objects[k]['catalog.json'],
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            requests_mock.get(re.compile(url+'/collections'), json=stac_objects[k]['collection.json'],
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            result = runner.invoke(stac.cli.collection, ['--url', url, '--collection-id', 'my_collection1'])
+            assert result.exit_code == 0
+            assert 'my_collection1' in result.output
+
+    def test_items(self, stac_objects, requests_mock, runner):
+        for k in stac_objects:
+            s = stac.STAC(url, True)
+            requests_mock.get(re.compile(url+'/stac'), json=stac_objects[k]['catalog.json'],
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            requests_mock.get(re.compile(url+'/collections'), json=stac_objects[k]['collection.json'],
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            requests_mock.get(re.compile(url+'/collections/my_collection1/items'), json=stac_objects[k]['items.json'],
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            result = runner.invoke(stac.cli.items, ['--url', url, '--collection-id', 'my_collection1'])
+            assert result.exit_code == 0
+            assert 'feature1' in result.output
+
+    def test_search(self, stac_objects, requests_mock, runner):
+        for k in stac_objects:
+            s = stac.STAC(url, True)
+            requests_mock.get(re.compile(url+'/stac'), json=stac_objects[k]['catalog.json'],
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            requests_mock.get(re.compile(url+'/collections'), json=stac_objects[k]['collection.json'],
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            requests_mock.get(re.compile(url+'/stac/search'), json=stac_objects[k]['items.json'],
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            result = runner.invoke(stac.cli.search, ['--url', url])
+            assert result.exit_code == 0
+            assert 'feature1' in result.output
+
 
 if __name__ == '__main__':
     pytest.main(['--color=auto', '--no-cov'])
