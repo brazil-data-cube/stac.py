@@ -55,20 +55,6 @@ class STAC:
                 self._collections[i.href.split('/')[-1]] = None
         return list(self._collections.keys())
 
-    @property
-    def collections(self):
-        """:return a dict with the STAC Colletion for every available collection."""
-        if self.catalog:
-            pass
-
-        for collection_id in self._collections.keys():
-            try:
-                data = Utils._get(f'{self._url}/collections/{collection_id}')
-                self._collections[collection_id] = Collection(data, self._validate)
-            except HTTPError as e: # pragma: no cover
-                warnings.warn(f"Could not get '{collection_id}' due to: {str(e)}")
-        return self._collections
-
     def collection(self, collection_id):
         """Return the given collection.
 

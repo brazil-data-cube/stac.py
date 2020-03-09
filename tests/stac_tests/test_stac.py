@@ -140,9 +140,9 @@ class TestStac:
             requests_mock.get(match_url, json=stac_objects[k]['collection.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
-            response = s.collections
+            response = s.collection('my_collection1')
 
-            assert s.collection('my_collection1') == stac_objects[k]['collection.json']
+            assert response == stac_objects[k]['collection.json']
 
     def test_item(self, stac_objects, requests_mock):
         for k in stac_objects:
@@ -197,12 +197,12 @@ class TestStac:
             requests_mock.get(match_url, json=stac_objects[k]['collection.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
-            response = s.collections
+            collection = s.collection('my_collection1')
 
             requests_mock.get(match_url, json=stac_objects[k]['items.json']['features'][0],
                               status_code=200,
                               headers={'content-type':'application/json'})
-            response = s.collection('my_collection1').get_items(item_id='feature1')
+            response = collection.get_items(item_id='feature1')
 
             assert response.id == 'feature1'
 
@@ -223,10 +223,6 @@ class TestStac:
     def test_search(self, stac_objects, requests_mock):
         for k in stac_objects:
             s = stac.STAC(url, True)
-            requests_mock.get(match_url, json=stac_objects[k]['collection.json'],
-                              status_code=200,
-                              headers={'content-type':'application/json'})
-            response = s.collections
 
             requests_mock.get(match_url, json=stac_objects[k]['items.json'],
                               status_code=200,
