@@ -11,9 +11,60 @@ import json
 from pkg_resources import resource_string
 
 from .catalog import Catalog
+from .common import Provider
 from .item import Item, ItemCollection
 from .utils import Utils
 
+
+class Stats(dict):
+    """The Stats object."""
+
+    def __init__(self, data):
+        """Initialize instance with dictionary data.
+
+        :param data: Dict with Stats metadata.
+        """
+        super(Stats, self).__init__(data or {})
+
+    @property
+    def min(self):
+        """:return: the min of Stats for a collection."""
+        return self['min']
+
+    @property
+    def max(self):
+        """:return: the max of Stats for a collection."""
+        return self['max']
+
+class SpatialExtent(dict):
+    """The Spatial Extent object."""
+
+    def __init__(self, data):
+        """Initialize instance with dictionary data.
+
+        :param data: Dict with Spatial Extent metadata.
+        """
+        super(SpatialExtent, self).__init__(data or {})
+
+    @property
+    def bbox(self):
+        """:return: the bbox of the Spatial Extent."""
+        return self['bbox']
+
+class TemporalExtent(dict):
+    """The Temporal Extent object."""
+
+    def __init__(self, data):
+        """Initialize instance with dictionary data.
+
+        :param data: Dict with Temporal Extent metadata.
+        """
+        super(TemporalExtent, self).__init__(data or {})
+
+    @property
+    def interval(self):
+        """:return: the interval of the Temporal Extent."""
+        return self['interval']
 
 class Extent(dict):
     """The Extent object."""
@@ -28,43 +79,16 @@ class Extent(dict):
     @property
     def spatial(self):
         """:return: the spatial extent."""
+        if 'bbox' in self['spatial']:
+            return SpatialExtent(self['spatial'])
         return self['spatial']
 
     @property
     def temporal(self):
         """:return: the temporal extent."""
+        if 'interval' in self['temporal']:
+            return TemporalExtent(self['temporal'])
         return self['temporal']
-
-
-class Provider(dict):
-    """The Provider Object."""
-
-    def __init__(self, data):
-        """Initialize instance with dictionary data.
-
-        :param data: Dict with Provider metadata.
-        """
-        super(Provider, self).__init__(data or {})
-
-    @property
-    def name(self):
-        """:return: the Provider name."""
-        return self['name']
-
-    @property
-    def description(self):
-        """:return: the Provider description."""
-        return self['description']
-
-    @property
-    def roles(self):
-        """:return: the Provider roles."""
-        return self['roles']
-
-    @property
-    def url(self):
-        """:return: the Provider url."""
-        return self['url']
 
 
 class Collection(Catalog):
@@ -112,6 +136,11 @@ class Collection(Catalog):
         return self['properties']
 
     @property
+    def summaries(self):
+        """:return: the Collection summaries."""
+        return {k: Stats(v) for k, v in self['summaries'].items()}
+
+    @property
     def _schema(self):
         """:return: the Collection jsonschema."""
         schema = resource_string(__name__, f'jsonschemas/{self.stac_version}/collection.json')
@@ -119,7 +148,16 @@ class Collection(Catalog):
         return _schema
 
     def get_items(self, item_id=None, filter=None):
-        """:return: A GeoJSON FeatureCollection of STAC Items from the collection."""
+        """Retrieve items of the collection.
+
+        :param item_id: (optional) a str with a STAC Item id.
+        :type item_id: str
+
+        :param filter: (optional) A dictionary with valid STAC query parameters.
+        :type filter: dict
+
+        :return: A GeoJSON FeatureCollection of STAC Items from the collection.
+        """
         for link in self['links']:
             if link['rel'] == 'items':
                 if item_id is not None:

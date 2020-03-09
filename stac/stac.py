@@ -6,6 +6,9 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Python API client wrapper for STAC."""
+import warnings
+
+from requests import HTTPError
 
 from .catalog import Catalog
 from .collection import Collection
@@ -30,7 +33,7 @@ class STAC:
         self._validate = validate
 
     @property
-    def conformance(self):
+    def conformance(self): # pragma: no cover
         """Return the list of conformance classes that the server conforms to."""
         return Utils._get('{}/conformance'.format(self._url))
 
@@ -50,22 +53,7 @@ class STAC:
         for i in self._catalog.links:
             if i.rel == 'child':
                 self._collections[i.href.split('/')[-1]] = None
-        return self._collections.keys()
-
-    @property
-    def collections(self):
-        """:return a dict with the STAC Colletion for every available collection."""
-        if self.catalog:
-            pass
-
-        for collection_id in self._collections.keys():
-            try:
-                data = Utils._get(f'{self._url}/collections/{collection_id}')
-                self._collections[collection_id] = Collection(data, self._validate)
-            except: # pragma: no cover
-                pass
-
-        return self._collections
+        return list(self._collections.keys())
 
     def collection(self, collection_id):
         """Return the given collection.
@@ -82,7 +70,7 @@ class STAC:
         try:
             data = Utils._get(f'{self._url}/collections/{collection_id}')
             self._collections[collection_id] = Collection(data, self._validate)
-        except Exception as e:
+        except HTTPError as e:
             raise KeyError(f'Could not retrieve information for collection: {collection_id}')
         return self._collections[collection_id]
 
