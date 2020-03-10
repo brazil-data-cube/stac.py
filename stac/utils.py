@@ -32,7 +32,22 @@ class Utils:
 
         :raises ValueError: If the response body does not contain a valid json.
         """
-        response = requests.get(url, params=params)
+        response = None
+
+        if params is not None:
+            if 'intersects' in params:
+                if 'collections' in params and isinstance(params['collections'], str):
+                    params['collections'] = params['collections'].split(',')
+                if 'ids' in params and isinstance(params['ids'], str):
+                    params['ids'] = params['ids'].split(',')
+                if 'bbox' in params and isinstance(params['bbox'], str):
+                    params['bbox'] = [float(coord) for coord in params['bbox'].split(',')]
+
+                response = requests.post(url, json=params)
+            else:
+                response = requests.get(url, params=params)
+        else:
+            response = requests.get(url)
 
         response.raise_for_status()
 
@@ -47,7 +62,7 @@ class Utils:
     @staticmethod
     def validate(stac_object):
         """Validate a STAC Object using its jsonschema.
-        
+
         :raise ValidationError: raise a ValidationError if the STAC Object couldn't be validated.
         """
         resolver = RefResolver(f'file://{base_schemas_path}{stac_object.stac_version}/', None)

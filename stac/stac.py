@@ -45,7 +45,7 @@ class STAC:
         :return list of available collections.
         """
         if len(self._collections) > 0:
-            return self._collections.keys()
+            return list(self._collections.keys())
 
         url = '{}/stac'.format(self._url)
         self._catalog = Catalog(Utils._get(url), self._validate)
