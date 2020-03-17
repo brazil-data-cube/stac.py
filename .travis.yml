@@ -11,6 +11,7 @@ branches:
         - master
         - b-0.7.0
         - b-0.8.0
+        - b-0.8.1
 
 dist: bionic
 
