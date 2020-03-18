@@ -27,7 +27,7 @@ Python Client Library for STAC
         :alt: Code Coverage Test
 
 .. image:: https://readthedocs.org/projects/stacpy/badge/?version=b-0.8.0
-        :target: https://stacpy.readthedocs.io/en/b-0..0/
+        :target: https://stacpy.readthedocs.io/en/b-0.8.0/
         :alt: Documentation Status
 
 .. image:: https://img.shields.io/badge/lifecycle-experimental-orange.svg
