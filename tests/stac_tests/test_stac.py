@@ -152,6 +152,8 @@ class TestStac:
                               headers={'content-type':'application/json'})
             catalog = s.catalog
 
+            s.catalog #test for non empty catalog
+
             requests_mock.get(match_url, json=stac_objects[k]['collection.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
@@ -294,7 +296,7 @@ class TestCli:
                               status_code=200,
                               headers={'content-type':'application/json'})
 
-            requests_mock.get(re.compile(url+'/stac/search'), json=stac_objects[k]['items.json'],
+            requests_mock.post(re.compile(url+'/stac/search'), json=stac_objects[k]['items.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
             intersects = json.dumps(stac_objects[k]['items.json']['features'][0]['geometry'])
