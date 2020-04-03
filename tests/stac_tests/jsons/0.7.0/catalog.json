@@ -1,0 +1,14 @@
+{
+    "title":"my_catalog title",
+    "stac_version":"0.7.0",
+    "id":"stac",
+    "description":"my_catalog description",
+    "links":[
+        {
+            "href":"http://localhost/collection/my_collection1",
+            "title":"my_collection1",
+            "rel": "child",
+            "type": "application/json"
+        }
+    ]
+}

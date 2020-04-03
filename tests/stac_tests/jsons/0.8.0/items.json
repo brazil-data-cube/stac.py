@@ -1,0 +1,109 @@
+{
+    "type":"FeatureCollection",
+    "links": [
+        {
+            "href":"http://localhost/collection/my_collection1/items",
+            "rel":"self"
+        }
+    ],
+    "features":[
+            {"type": "Feature",
+             "stac_version": "0.8.0",
+            "id": "feature1",
+            "description": "aaa",
+            "bbox": [-122.59750209, 37.48803556, -122.2880486, 37.613537207],
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                [[-122.308150179, 37.488035566],
+                    [-122.597502109, 37.538869539],
+                    [-122.576687533, 37.613537207],
+                    [-122.288048600, 37.562818007],
+                    [-122.308150179, 37.488035566]]]
+            },
+            "properties": {
+                "datetime": "2016-05-03T13:21:30.040Z",
+                "license":"MIT",
+                "providers":[
+                    {
+                    "name":"my_provider",
+                    "description": "my_provider_description",
+                    "roles": ["producer"],
+                    "url": "my_provider_url"
+                    }
+                ],
+                "title":"my_item",
+                "updated":"2016-05-03T13:21:30.040Z",
+                "created":"2016-05-03T13:21:30.040Z"
+            },
+            "collection": "my_collection1",
+            "links": [
+                {
+                "rel": "self",
+                "href":  "http://localhost/collections/my_collection1/feature1"
+                },
+                {
+                "rel": "collection",
+                "href": "http://localhost/collections/my_collection1"
+                }
+            ],
+            "assets": {
+                "thumbnail": {
+                "href": "http://localhost/collections/my_collection1/feature1/thumbnail.png",
+                "title": "Thumbnail",
+                "type": "image/jpeg"
+                }
+            }
+        },
+        {"type": "Feature",
+            "id": "feature2",
+            "stac_version": "0.8.0",
+            "bbox": [-122.59750209, 37.48803556, -122.2880486, 37.613537207],
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                [
+                    [-122.308150179, 37.488035566],
+                    [-122.597502109, 37.538869539],
+                    [-122.576687533, 37.613537207],
+                    [-122.288048600, 37.562818007],
+                    [-122.308150179, 37.488035566]
+                ]
+                ]
+            },
+            "properties": {
+                "datetime": "2016-05-03T13:21:30.040Z",
+                "license":"MIT",
+                "providers":[
+                    {
+                    "name":"my_provider",
+                    "description": "my_provider_description",
+                    "roles": ["producer"],
+                    "url": "my_provider_url"
+                    }
+                ],
+                "title":"my_item2",
+                "updated":"2016-05-03T13:21:30.040Z",
+                "created":"2016-05-03T13:21:30.040Z"
+            },
+            "collection": "my_collection1",
+            "links": [
+                {
+                "rel": "self",
+                "href": "http://localhost/collections/my_collection1/feature2"
+                },
+                {
+                "rel": "collection",
+                "href": "http://localhost/collections/my_collection1"
+                }
+            ],
+            "assets": {
+                "thumbnail": {
+                "href": "http://localhost/collections/my_collection1/feature1/thumbnail.png",
+                "title": "Thumbnail",
+                "type": "image/jpeg"
+                }
+            }
+        }
+    ]
+}

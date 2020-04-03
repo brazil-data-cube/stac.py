@@ -10,6 +10,19 @@
 Changes
 =======
 
+
+Version 0.8.0-0
+---------------
+
+Released 2020-04-03
+
+- Support for STAC version 0.8.0.
+- Added tests for STAC version 0.8.0.
+- Added CLI support.
+- Added tests for CLI.
+- Removed stac.collections property
+
+
 Version 0.7.0-0
 ---------------
 
