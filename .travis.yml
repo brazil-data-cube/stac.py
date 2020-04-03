@@ -11,6 +11,7 @@ branches:
         - master
         - b-0.7.0
         - b-0.8.0
+        - b-0.8.1
 
 dist: bionic
 
@@ -30,3 +31,9 @@ script:
 
 after_success:
     - coveralls
+
+notifications:
+    slack: 
+        rooms:
+            - secure: "injKqTR0s9nv1u49G04HrcRmG5OZUTTrbVSXD/irCWFj3ySsQmYsMffHdEl4qZOtZAjyO1xxIiHTjFqHMwUD9/9P8Cl6gRLNMPs5BawtG4XLU6K6GcmjfqAHxd5VS/G+VLdebdyKmX+Spg5Vw6Qf7TiZoOn28xse7J3B96r6TknPUv6P0hDRB1/fZYEodAxtBnfd45dVqro8QfJBDBsOMyym9GA1r7yvM7o4JMFI0ymNaomc07OrOLvRDH3QoOS9RbWKdMowNw9IL6VT+9xuOrWh3pSgs1O+cOoTfekQjCf0CjF8BKJzMO2kUwKi6lEMTmwF7aVbSBp4PwaAeiN/UKpPRustHE8IijyJXi2kUVKq3cLzv0If0BuCj0YuCyRRqmIdeMtxv9ZCdLLXmhaOp89InqZQdKDqIMu77Il2i2qoZRBLfmv26okLffd5YjglqOolRhMy3hvg44Is0PImFdepqHuixdej+VPUUvD5ZD7UMtCMW1oayHGtEZNLSTurowJ5m5Zp19QWJsH4Rg1jjEc91AEkVv6YlvRA5UbvNGND238ghYPydTtNahaEm705oRMo98SH57G4PmZx4H8ZuHelJtC7pjzUE9yPw3SYdlANvkz/xGcZlT8ciw4Qq+Kz83FptF6obtevMXB09EoqYKdeUZoplE1AEluq3ODssr0="
+        on_sucess: always
