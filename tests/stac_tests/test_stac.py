@@ -110,7 +110,7 @@ class TestStac:
             assert collection.providers[0].description
             assert collection.providers[0].roles
             assert collection.providers[0].url
-            if k == '0.8.0':
+            if k in ['0.8.0', '0.8.1']:
                 assert collection.extent.spatial.bbox
                 assert collection.extent.temporal.interval
                 assert collection.summaries

@@ -60,7 +60,7 @@ def items(url, collection_id, limit, page, datetime, bbox):
     if bbox is not None:
         filter['bbox'] = bbox
     if datetime is not None:
-        if service._catalog.stac_version == '0.8.0':
+        if service._catalog.stac_version in ['0.8.0', '0.8.1']:
             filter['datetime'] = datetime
         elif service._catalog.stac_version == '0.7.0':
             filter['time'] = datetime

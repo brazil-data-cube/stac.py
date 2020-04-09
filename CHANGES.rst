@@ -10,6 +10,11 @@
 Changes
 =======
 
+Version 0.8.1-0
+---------------
+
+- Support for STAC version 0.8.1.
+- Added tests for STAC version 0.8.1.
 
 Version 0.8.0-0
 ---------------
