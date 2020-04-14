@@ -13,8 +13,11 @@ Changes
 Version 0.8.1-0
 ---------------
 
+Released 2020-04-14
+
 - Support for STAC version 0.8.1.
 - Added tests for STAC version 0.8.1.
+
 
 Version 0.8.0-0
 ---------------
@@ -41,4 +44,4 @@ Released 2020-02-27
 - Package support through Setuptools.
 - Installation and use instructions.
 - Source code versioning based on `Semantic Versioning 2.0.0 <https://semver.org/>`_.
-- License: `MIT <https://raw.githubusercontent.com/brazil-data-cube/stac.py/b-0.7.0/LICENSE>`_.
+- License: `MIT <https://raw.githubusercontent.com/brazil-data-cube/stac.py/v0.7.0-0/LICENSE>`_.

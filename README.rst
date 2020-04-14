@@ -18,10 +18,6 @@ Python Client Library for STAC
         :target: https://travis-ci.com/brazil-data-cube/stac.py
         :alt: Build Status
 
-.. .. image:: https://img.shields.io/badge/tests-0%20passed,%200%20failed-critical
-..         :target: https://travis-ci.org/brazil-data-cube/stac.py
-..         alt: Tests
-
 .. image:: https://coveralls.io/repos/github/brazil-data-cube/stac.py/badge.svg?branch=b-0.8.1
         :target: https://coveralls.io/github/brazil-data-cube/stac.py?branch=b-0.8.1
         :alt: Code Coverage Test
@@ -38,7 +34,7 @@ Python Client Library for STAC
         :target: https://github.com/brazil-data-cube/stac.py/releases
         :alt: Release
 
-.. image:: https://badges.gitter.im/brazil-data-cube/community.png
+.. image:: https://badges.gitter.im/brazil-data-cube/community.svg/
         :target: https://gitter.im/brazil-data-cube/community#
         :alt: Join the chat
 
