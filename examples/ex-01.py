@@ -8,18 +8,17 @@ import stac
 from matplotlib import pyplot
 
 #%%
-s = stac.STAC('http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0', True)
-
+s = stac.STAC('http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/', True)
 
 #%%
 s.catalog
 
 #%%
-collection = s.collections['C64mMEDIAN']
+collection = s.collection('C4_64_16D_MED')
 collection
 
 #%%
-items = s.collections['C64mMEDIAN'].get_items()
+items = collection.get_items()
 items
 
 #%%
