@@ -8,7 +8,7 @@ import stac
 from matplotlib import pyplot
 
 #%%
-s = stac.STAC('http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/', True)
+s = stac.STAC('http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1/', True)
 
 #%%
 s.catalog
