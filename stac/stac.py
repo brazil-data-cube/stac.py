@@ -25,12 +25,13 @@ class STAC:
     :type url: str
     """
 
-    def __init__(self, url, validate=False):
+    def __init__(self, url, validate=False, access_token=None):
         """Create a STAC client attached to the given host address (an URL)."""
         self._url = url if url[-1] != '/' else url[0:-1]
         self._collections = dict()
         self._catalog = dict()
         self._validate = validate
+        self._access_token = f'?access_token={access_token}' if access_token else ''
 
     @property
     def conformance(self): # pragma: no cover
@@ -47,12 +48,16 @@ class STAC:
         if len(self._collections) > 0:
             return list(self._collections.keys())
 
-        url = '{}/stac'.format(self._url)
+        url = f'{self._url}/stac{self._access_token}'
         self._catalog = Catalog(Utils._get(url), self._validate)
 
         for i in self._catalog.links:
             if i.rel == 'child':
-                self._collections[i.href.split('/')[-1]] = None
+                if '?' in i.href:
+                    collection_name = i.href.split('/')[-1]
+                    self._collections[collection_name[:collection_name.index('?')]] = None
+                else:
+                    self._collections[i.href.split('/')[-1]] = None
         return list(self._collections.keys())
 
     def collection(self, collection_id):
@@ -64,11 +69,12 @@ class STAC:
         :returns: A STAC Collection.
         :rtype: dict
         """
+
         if collection_id in self._collections.keys() and \
             self._collections[collection_id] is not None:
             return self._collections[collection_id]
         try:
-            data = Utils._get(f'{self._url}/collections/{collection_id}')
+            data = Utils._get(f'{self._url}/collections/{collection_id}{self._access_token}')
             self._collections[collection_id] = Collection(data, self._validate)
         except HTTPError as e:
             raise KeyError(f'Could not retrieve information for collection: {collection_id}')
@@ -84,7 +90,7 @@ class STAC:
         :returns: A GeoJSON FeatureCollection.
         :rtype: dict
         """
-        url = '{}/stac/search'.format(self._url)
+        url = f'{self._url}/stac/search{self._access_token}'
         data = Utils._get(url, params=filter)
         return ItemCollection(data, self._validate)
 

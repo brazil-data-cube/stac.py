@@ -21,9 +21,10 @@ def cli():
 
 @click.command()
 @click.option('--url', default=None, help='The STAC server address (an URL).')
-def catalog(url):
+@click.option('--access-token', default=None, help='Personal Access Token of the BDC Auth')
+def catalog(url, access_token=None):
     """Return the list of available collections in the catalog."""
-    service = STAC(url)
+    service = STAC(url, access_token=access_token)
 
     retval = service.catalog
     for c in retval:
@@ -33,9 +34,10 @@ def catalog(url):
 @click.command()
 @click.option('--url', default=None, help='The STAC server address (an URL).')
 @click.option('--collection-id', default=None, help='The Collection id.')
-def collection(url, collection_id):
+@click.option('--access-token', default=None, help='Personal Access Token of the BDC Auth')
+def collection(url, collection_id, access_token=None):
     """Return the metadata for a given collection."""
-    service = STAC(url)
+    service = STAC(url, access_token=access_token)
 
     retval = service.collection(collection_id)
 
@@ -48,9 +50,10 @@ def collection(url, collection_id):
 @click.option('--page', default=1, help='The page number of results. Defaults to 1. (STAC 0.7.0 only)')
 @click.option('--datetime', help='Single date, date+time, or a range (\'/\' seperator), formatted to RFC 3339, section 5.6')
 @click.option('--bbox', default=None, help='Requested bounding box west, south, east, north')
-def items(url, collection_id, limit, page, datetime, bbox):
+@click.option('--access-token', default=None, help='Personal Access Token of the BDC Auth')
+def items(url, collection_id, limit, page, datetime, bbox, access_token=None):
     """Return items from a given collection ID and filters."""
-    service = STAC(url)
+    service = STAC(url, access_token=access_token)
     service.catalog
     filter = {
         'limit': limit,
@@ -84,9 +87,10 @@ def items(url, collection_id, limit, page, datetime, bbox):
 @click.option('--page', default=1, help='The page number of results. Defaults to 1. (STAC 0.7.0 only)')
 @click.option('--datetime', help='Single date, date+time, or a range (\'/\' seperator), formatted to RFC 3339, section 5.6')
 @click.option('--bbox', default=None, help='Requested bounding box west, south, east, north')
-def search(url, collections, ids, intersects, limit, next, page, datetime, bbox):
+@click.option('--access-token', default=None, help='Personal Access Token of the BDC Auth')
+def search(url, collections, ids, intersects, limit, next, page, datetime, bbox, access_token=None):
     """Search through a STAC catalog."""
-    service = STAC(url)
+    service = STAC(url, access_token=access_token)
     service.catalog
 
     filter = {

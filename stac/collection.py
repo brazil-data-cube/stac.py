@@ -163,6 +163,6 @@ class Collection(Catalog):
                 if item_id is not None:
                     data = Utils._get(f'{link["href"]}/{item_id}')
                     return Item(data, self._validate)
-                data = Utils._get(link['href'], params=filter)
+                data = Utils._get(f'{link["href"]}', params=filter)
                 return ItemCollection(data)
         return ItemCollection({})
