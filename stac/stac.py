@@ -21,13 +21,21 @@ class STAC:
 
     See https://github.com/radiantearth/stac-spec for more information on STAC.
 
-    :param url: The STAC server URL.
+    :param url: URL for the Root STAC Catalog.
     :type url: str
     """
 
     def __init__(self, url, validate=False, access_token=None):
-        """Create a STAC client attached to the given host address (an URL)."""
-        self._url = url if url[-1] != '/' else url[0:-1]
+        """Create a STAC client attached to the given host address (an URL).
+
+        :param url: URL for the Root STAC Catalog.
+        :type url: str
+        :param validate: True if responses should ve validated
+        :type validate: bool
+        :param access_token: Authentication for the STAC API
+        :type access_token: str
+        """
+        self._url = url
         self._collections = dict()
         self._catalog = dict()
         self._validate = validate
@@ -48,8 +56,10 @@ class STAC:
         if len(self._collections) > 0:
             return list(self._collections.keys())
 
-        url = f'{self._url}/stac{self._access_token}'
-        self._catalog = Catalog(Utils._get(url), self._validate)
+        url = f'{self._url}{self._access_token}'
+        response = Utils._get(url)
+
+        self._catalog = Catalog(response, self._validate)
 
         for i in self._catalog.links:
             if i.rel == 'child':
@@ -69,7 +79,6 @@ class STAC:
         :returns: A STAC Collection.
         :rtype: dict
         """
-
         if collection_id in self._collections.keys() and \
             self._collections[collection_id] is not None:
             return self._collections[collection_id]
