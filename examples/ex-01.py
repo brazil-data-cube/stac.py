@@ -8,13 +8,13 @@ import stac
 from matplotlib import pyplot
 
 #%%
-s = stac.STAC('http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1/', True)
+s = stac.STAC('http://localhost:5000', False)
 
 #%%
 s.catalog
 
 #%%
-collection = s.collection('C4_64_16D_MED')
+collection = s.collection(s.catalog[0])
 collection
 
 #%%
@@ -25,9 +25,9 @@ items
 items.features[0].assets
 
 #%%
-red = items.features[0].assets['red'].download()
-green = items.features[0].assets['green'].download()
-blue = items.features[0].assets['blue'].download()
+red = items.features[0].assets['BAND15'].download()
+green = items.features[0].assets['BAND14'].download()
+blue = items.features[0].assets['BAND13'].download()
 
 red
 

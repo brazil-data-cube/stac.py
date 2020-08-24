@@ -19,7 +19,7 @@ Install from GitHub:
 
 .. code-block:: shell
 
-        $ pip3 install git+https://github.com/brazil-data-cube/stac.py@b-0.8.1
+        $ pip3 install git+https://github.com/brazil-data-cube/stac.py@b-0.9.0
 
 
 Development installation
