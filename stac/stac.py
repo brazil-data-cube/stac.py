@@ -99,7 +99,11 @@ class STAC:
         :returns: A GeoJSON FeatureCollection.
         :rtype: dict
         """
-        url = f'{self._url}/stac/search{self._access_token}'
+        if self._catalog.stac_version == '0.9.0':
+            url = f'{self._url}/search{self._access_token}'
+        else:
+            url = f'{self._url}/stac/search{self._access_token}'
+
         data = Utils._get(url, params=filter)
         return ItemCollection(data, self._validate)
 

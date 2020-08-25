@@ -11,6 +11,7 @@ import json
 import shutil
 
 import requests
+from urllib.parse import urlparse
 from pkg_resources import resource_string
 
 from .common import Link, Provider
@@ -51,7 +52,7 @@ class Asset(dict):
                             working directory.
         :return: path to downloaded file.
         """
-        local_filename = self['href'].split('/')[-1]
+        local_filename = urlparse(self['href'])[2].split('/')[-1]
         if folder_path is not None:
             folder_path += local_filename
 
@@ -84,7 +85,7 @@ class Geometry(dict):
 
 class Properties(dict):
     """The Properties Object."""
-    
+
     def __init__(self, data):
         """Initialize instance with dictionary data.
 
