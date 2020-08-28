@@ -83,7 +83,8 @@ class STAC:
             self._collections[collection_id] is not None:
             return self._collections[collection_id]
         try:
-            data = Utils._get(f'{self._url}/collections/{collection_id}{self._access_token}')
+            url = '/'.join(self._url.split('/')[:-1]) if self._url.endswith('/stac') else self._url
+            data = Utils._get(f'{url}/collections/{collection_id}{self._access_token}')
             self._collections[collection_id] = Collection(data, self._validate)
         except HTTPError as e:
             raise KeyError(f'Could not retrieve information for collection: {collection_id}')
