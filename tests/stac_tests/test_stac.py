@@ -11,12 +11,13 @@ import json
 import os
 import re
 from pathlib import Path
-from pkg_resources import resource_filename, resource_string
 
 import pytest
 import requests
-import stac
 from click.testing import CliRunner
+from pkg_resources import resource_filename, resource_string
+
+import stac
 
 url = os.environ.get('STAC_SERVER_URL', 'http://localhost')
 match_url = re.compile(url)
