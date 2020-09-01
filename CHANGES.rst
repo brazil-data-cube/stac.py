@@ -11,6 +11,16 @@ Changes
 =======
 
 
+Version 0.9.0-1
+---------------
+
+
+Released 2020-09-01
+
+
+- Improved tests.
+
+
 Version 0.9.0-0
 ---------------
 
