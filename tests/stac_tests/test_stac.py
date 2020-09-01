@@ -70,7 +70,7 @@ class TestStac:
 
     def test_catalog(self, stac_objects, requests_mock):
         for k in stac_objects:
-            s = stac.STAC(url, True)
+            s = stac.STAC(url + "/stac" if k != '0.9.0' else url, True)
 
             requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
                               status_code=200,
@@ -89,7 +89,7 @@ class TestStac:
 
     def test_collection(self, stac_objects, requests_mock):
         for k in stac_objects:
-            s = stac.STAC(url, True)
+            s = stac.STAC(url + "/stac" if k != '0.9.0' else url, True)
             requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
@@ -110,19 +110,19 @@ class TestStac:
             assert collection.providers[0].description
             assert collection.providers[0].roles
             assert collection.providers[0].url
-            if k in ['0.8.0', '0.8.1']:
+            if k == '0.7.0':
+                assert collection.extent.spatial
+                assert collection.extent.temporal
+            else:
                 assert collection.extent.spatial.bbox
                 assert collection.extent.temporal.interval
                 assert collection.summaries
                 assert collection.summaries['val'].min == 0
                 assert collection.summaries['val'].max == 1
-            else:
-                assert collection.extent.spatial
-                assert collection.extent.temporal
 
     def test_collection_missing(self, stac_objects, requests_mock):
         for k in stac_objects:
-            s = stac.STAC(url, True)
+            s = stac.STAC(url + "/stac" if k != '0.9.0' else url, True)
             requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
@@ -136,7 +136,7 @@ class TestStac:
 
     def test_collection_without_catalog(self, stac_objects, requests_mock):
         for k in stac_objects:
-            s = stac.STAC(url, True)
+            s = stac.STAC(url + "/stac" if k != '0.9.0' else url, True)
             requests_mock.get(match_url, json=stac_objects[k]['collection.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
@@ -146,8 +146,14 @@ class TestStac:
 
     def test_item(self, stac_objects, requests_mock):
         for k in stac_objects:
-            s = stac.STAC(url, True)
-            requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
+            s = stac.STAC(url + "/stac" if k != '0.9.0' else url, True)
+            if k == '0.9.0':
+                requests_mock.get(re.compile(url+'/'), json=stac_objects[k]['catalog.json'],
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            else:
+                requests_mock.get(re.compile(url+'/stac'), json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
             catalog = s.catalog
@@ -190,7 +196,7 @@ class TestStac:
 
     def test_item_id(self, stac_objects, requests_mock):
         for k in stac_objects:
-            s = stac.STAC(url, True)
+            s = stac.STAC(url + "/stac" if k != '0.9.0' else url, True)
             requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
@@ -210,7 +216,7 @@ class TestStac:
 
     def test_item_empty(self, stac_objects, requests_mock):
         for k in stac_objects:
-            s = stac.STAC(url, True)
+            s = stac.STAC(url + "/stac" if k != '0.9.0' else url, True)
             requests_mock.get(match_url, json=stac_objects[k]['collection.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
@@ -224,7 +230,13 @@ class TestStac:
 
     def test_search(self, stac_objects, requests_mock):
         for k in stac_objects:
-            s = stac.STAC(url, True)
+            s = stac.STAC(url + "/stac" if k != '0.9.0' else url, True)
+
+            requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            response = s.catalog
 
             requests_mock.get(match_url, json=stac_objects[k]['items.json'],
                               status_code=200,
@@ -237,19 +249,18 @@ class TestStac:
 class TestCli:
     def test_catalog(self, stac_objects, requests_mock, runner):
         for k in stac_objects:
-            s = stac.STAC(url, True)
             requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
 
-            result = runner.invoke(stac.cli.catalog, ['--url', url])
+            result = runner.invoke(stac.cli.catalog, ['--url', url + "/stac" if k != '0.9.0' else url])
             assert result.exit_code == 0
             assert 'my_collection1' in result.output
 
     def test_collection(self, stac_objects, requests_mock, runner):
         for k in stac_objects:
-            s = stac.STAC(url, True)
-            requests_mock.get(re.compile(url+'/stac'), json=stac_objects[k]['catalog.json'],
+            requests_mock.get(re.compile(url + "/stac" if k != '0.9.0' else url),
+                              json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
 
@@ -257,14 +268,15 @@ class TestCli:
                               status_code=200,
                               headers={'content-type':'application/json'})
 
-            result = runner.invoke(stac.cli.collection, ['--url', url, '--collection-id', 'my_collection1'])
+            result = runner.invoke(stac.cli.collection, ['--url', url + "/stac" if k != '0.9.0' else url,
+                                                          '--collection-id', 'my_collection1'])
             assert result.exit_code == 0
             assert 'my_collection1' in result.output
 
     def test_items(self, stac_objects, requests_mock, runner):
         for k in stac_objects:
-            s = stac.STAC(url, True)
-            requests_mock.get(re.compile(url+'/stac'), json=stac_objects[k]['catalog.json'],
+
+            requests_mock.get(re.compile(url + "/stac" if k != '0.9.0' else url+'/'), json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
 
@@ -276,7 +288,7 @@ class TestCli:
                               status_code=200,
                               headers={'content-type':'application/json'})
 
-            result = runner.invoke(stac.cli.items, ['--url', url,
+            result = runner.invoke(stac.cli.items, ['--url', url + "/stac" if k != '0.9.0' else url,
                                                     '--collection-id', 'my_collection1',
                                                     '--limit', 1,
                                                     '--page', 1,
@@ -287,8 +299,8 @@ class TestCli:
 
     def test_search(self, stac_objects, requests_mock, runner):
         for k in stac_objects:
-            s = stac.STAC(url, True)
-            requests_mock.get(re.compile(url+'/stac'), json=stac_objects[k]['catalog.json'],
+            requests_mock.get(re.compile(url + "/stac" if k != '0.9.0' else url +'/'),
+                              json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
 
@@ -296,12 +308,14 @@ class TestCli:
                               status_code=200,
                               headers={'content-type':'application/json'})
 
-            requests_mock.post(re.compile(url+'/stac/search'), json=stac_objects[k]['items.json'],
-                              status_code=200,
-                              headers={'content-type':'application/json'})
+            requests_mock.post(re.compile(url + "/stac/search" if k != '0.9.0' else url + '/search'),
+                               json=stac_objects[k]['items.json'],
+                               status_code=200,
+                               headers={'content-type':'application/json'})
+
             intersects = json.dumps(stac_objects[k]['items.json']['features'][0]['geometry'])
 
-            result = runner.invoke(stac.cli.search, ['--url', url,
+            result = runner.invoke(stac.cli.search, ['--url', url + "/stac" if k != '0.9.0' else url,
                                                     '--collections', 'my_collection1',
                                                     '--ids', 'feature1',
                                                     '--intersects', intersects,

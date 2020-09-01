@@ -12,4 +12,4 @@ import pytest
 
 if __name__ == '__main__':
     import stac_tests.test_stac
-    pytest.main(['--color=auto', '--no-cov', '-v'])
+    pytest.main(['--color=auto', '--no-cov', '-v', '-x'])

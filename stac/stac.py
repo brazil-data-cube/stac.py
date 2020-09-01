@@ -63,7 +63,7 @@ class STAC:
 
         for i in self._catalog.links:
             if i.rel == 'child':
-                if '?' in i.href:
+                if '?' in i.href:  # pragma: no cover
                     collection_name = i.href.split('/')[-1]
                     self._collections[collection_name[:collection_name.index('?')]] = None
                 else:
@@ -100,10 +100,10 @@ class STAC:
         :returns: A GeoJSON FeatureCollection.
         :rtype: dict
         """
-        if self._catalog.stac_version == '0.9.0':
-            url = f'{self._url}/search{self._access_token}'
-        else:
-            url = f'{self._url}/stac/search{self._access_token}'
+        if not self._catalog:  # pragma: no cover
+            self.catalog
+
+        url = f'{self._url}/search{self._access_token}'
 
         data = Utils._get(url, params=filter)
         return ItemCollection(data, self._validate)
