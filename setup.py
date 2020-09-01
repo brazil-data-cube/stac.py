@@ -17,6 +17,8 @@ history = open('CHANGES.rst').read()
 
 docs_require = [
     'Sphinx>=2.2',
+    'sphinx_rtd_theme',
+    'sphinx-copybutton',
 ]
 
 tests_require = [
@@ -70,8 +72,8 @@ setup(
     long_description=readme + '\n\n' + history,
     keywords='SpatioTemporal Asset Catalog',
     license='MIT',
-    author='INPE',
-    author_email='gribeiro@dpi.inpe.br',
+    author="Brazil Data Cube Team",
+    author_email="brazildatacube@inpe.br",
     url='https://github.com/brazil-data-cube/stac.py',
     packages=packages,
     zip_safe=False,
