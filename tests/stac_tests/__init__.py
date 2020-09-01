@@ -7,4 +7,4 @@
 #
 
 """Unit-test for stac.py."""
-from .test_stac import TestStac, TestUtils, TestCli
+from .test_stac import TestCli, TestStac, TestUtils

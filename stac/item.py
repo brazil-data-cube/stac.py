@@ -9,9 +9,9 @@
 
 import json
 import shutil
+from urllib.parse import urlparse
 
 import requests
-from urllib.parse import urlparse
 from pkg_resources import resource_string
 
 from .common import Link, Provider
