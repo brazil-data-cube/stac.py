@@ -1,13 +1,14 @@
 ..
     This file is part of Python Client Library for STAC.
-    Copyright (C) 2019 INPE.
+    Copyright (C) 2019-2020 INPE.
 
-    Web Land Trajectory Service is free software; you can redistribute it and/or modify it
+    Python Client Library for STAC is free software; you can redistribute it and/or modify it
     under the terms of the MIT License; see LICENSE file for more details.
 
 
 Installation
 ============
+
 
 ``stac.py`` depends essentially on `Requests <https://requests.readthedocs.io/en/master/>`_. Please, read the instructions below in order to install ``stac.py``.
 
@@ -15,53 +16,83 @@ Installation
 Production installation
 -----------------------
 
-Install from GitHub:
 
-.. code-block:: shell
+Install from GitHub::
 
-        $ pip3 install git+https://github.com/brazil-data-cube/stac.py@b-0.9.0
+    pip3 install git+https://github.com/brazil-data-cube/stac.py@b-0.9.0
 
 
 Development installation
 ------------------------
 
-Clone the software repository:
 
-.. code-block:: shell
-
-        $ git clone https://github.com/brazil-data-cube/stac.py.git
+Clone the software repository
++++++++++++++++++++++++++++++
 
 
-Go to the source code folder:
+Use ``git`` to clone the software repository::
 
-.. code-block:: shell
-
-        $ cd stac.py
+    git clone https://github.com/brazil-data-cube/stac.py.git
 
 
-Install in development mode:
-
-.. code-block:: shell
-
-        $ pip3 install -e .[all]
+Install ``stac.py`` in Development Mode
++++++++++++++++++++++++++++++++++++++++
 
 
-Run the tests:
+Go to the source code folder::
 
-.. code-block:: shell
-
-        $ ./run-tests.sh
+    cd stac.py
 
 
-Generate the documentation:
+Install in development mode::
 
-.. code-block:: shell
-
-        $ python setup.py build_sphinx
+    pip3 install -e .[all]
 
 
-The above command will generate the documentation in HTML and it will place it under:
+.. note::
 
-.. code-block:: shell
+    If you want to create a new *Python Virtual Environment*, please, follow this instruction:
 
-    doc/sphinx/_build/html/
+    *1.* Create a new virtual environment linked to Python 3.7::
+
+        python3.7 -m venv venv
+
+
+    **2.** Activate the new environment::
+
+        source venv/bin/activate
+
+
+    **3.** Update pip and setuptools::
+
+        pip3 install --upgrade pip
+
+        pip3 install --upgrade setuptools
+
+
+Run the Tests
++++++++++++++
+
+
+Run the tests::
+
+    ./run-tests.sh
+
+
+Build the Documentation
++++++++++++++++++++++++
+
+
+Generate the documentation::
+
+    python setup.py build_sphinx
+
+
+The above command will generate the documentation in HTML and it will place it under::
+
+    docs/sphinx/_build/html/
+
+
+You can open the above documentation in your favorite browser, as::
+
+    firefox docs/sphinx/_build/html/index.html
