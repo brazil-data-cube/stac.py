@@ -9,6 +9,7 @@
 """Python Client Library for STAC."""
 
 import os
+
 from setuptools import find_packages, setup
 
 readme = open('README.rst').read()

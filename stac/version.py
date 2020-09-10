@@ -13,4 +13,4 @@ and parsed by ``setup.py``.
 """
 
 
-__version__ = '1.0.0a'
+__version__ = '0.9.0-2'
