@@ -11,6 +11,27 @@ Changes
 =======
 
 
+Version 0.9.0-2
+---------------
+
+
+Released 2020-09-10
+
+
+- Bug fix: properly handle query parameter(#42).
+
+
+
+Version 0.9.0-1
+---------------
+
+
+Released 2020-09-01
+
+
+- Improved tests.
+
+
 Version 0.9.0-0
 ---------------
 
