@@ -42,13 +42,13 @@ script:
 after_success:
     - coveralls
 
-#deploy:
-#    provider: pypi
-#    username: $PYPI_USERNAME
-#    password: $PYPI_PASSWORD
-#    server: $PYPI_SERVER
-#    distributions: "sdist"
-#    edge: true
-#    skip_existing: true
-#    on:
-#        tags: true
+deploy:
+    provider: pypi
+    username: $PYPI_USERNAME
+    password: $PYPI_PASSWORD
+    server: $PYPI_SERVER
+    distributions: "sdist"
+    edge: true
+    skip_existing: true
+    on:
+        tags: true
