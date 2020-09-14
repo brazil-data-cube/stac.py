@@ -6,9 +6,18 @@
     under the terms of the MIT License; see LICENSE file for more details.
 
 
-=======
 Changes
 =======
+
+
+Version 0.9.0-3
+---------------
+
+
+Released 2020-09-14
+
+
+- Publish into pypi
 
 
 Version 0.9.0-2

@@ -31,13 +31,18 @@ Python Client Library for STAC
         :alt: Documentation Status
 
 
-.. image:: https://img.shields.io/badge/lifecycle-experimental-orange.svg
-        :target: https://www.tidyverse.org/lifecycle/#experimental
+.. image:: https://img.shields.io/badge/lifecycle-maturing-blue.svg
+        :target: https://www.tidyverse.org/lifecycle/#maturing
         :alt: Software Life Cycle
 
 
 .. image:: https://img.shields.io/github/tag/brazil-data-cube/stac.py.svg
         :target: https://github.com/brazil-data-cube/stac.py/releases
+        :alt: Release
+
+
+.. image:: https://img.shields.io/pypi/v/stac.py
+        :target: https://pypi.org/project/stac.py/
         :alt: Release
 
 
@@ -57,14 +62,9 @@ Installation
 ============
 
 
-See `INSTALL.rst <./INSTALL.rst>`_.
+Linux, macOS, and Windows users can get ``stac.py`` from the `Python Package Index <https://pypi.org/project/stac.py/>`_ with a recent version of ``pip``::
 
-
-Running
-=======
-
-
-See `RUNNING.rst <./RUNNING.rst>`_.
+    pip install stac.py
 
 
 Developer Documentation
