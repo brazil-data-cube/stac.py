@@ -6,12 +6,4 @@
     under the terms of the MIT License; see LICENSE file for more details.
 
 
-Running STAC Client in the Command Line
-=======================================
-
-**Under Development!!!**
-
-.. .. code-block:: shell
-..
-..         stac conformance --url http://localhost/
-
+.. include:: ../../CHANGES.rst

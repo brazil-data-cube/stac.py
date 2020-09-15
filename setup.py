@@ -67,11 +67,12 @@ with open(os.path.join('stac', 'version.py'), 'rt') as fp:
     version = g['__version__']
 
 setup(
-    name='stac',
+    name='stac.py',
     version=version,
     description=__doc__,
     long_description=readme + '\n\n' + history,
-    keywords='SpatioTemporal Asset Catalog',
+    long_description_content_type = 'text/x-rst',
+    keywords=['SpatioTemporal Asset Catalog', 'stac', 'earth-observation', 'geospatial', 'gis'],
     license='MIT',
     author="Brazil Data Cube Team",
     author_email="brazildatacube@inpe.br",
@@ -90,14 +91,14 @@ setup(
     setup_requires=setup_requires,
     tests_require=tests_require,
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Intended Audience :: Education',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3 :: Only',
-        'Topic :: Scientific/Engineering :: GIS',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Scientific/Engineering :: GIS',
     ],
 )
