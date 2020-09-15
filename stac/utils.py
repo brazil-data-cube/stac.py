@@ -8,11 +8,14 @@
 """Utility data structures and algorithms."""
 import json
 
+import jinja2
 import requests
 from jsonschema import RefResolver, validate
 from pkg_resources import resource_filename, resource_string
 
 base_schemas_path = resource_filename(__name__, 'jsonschemas/')
+templateLoader = jinja2.FileSystemLoader( searchpath=resource_filename(__name__, 'templates/'))
+templateEnv = jinja2.Environment( loader=templateLoader )
 
 class Utils:
     """Utils STAC object."""
@@ -68,3 +71,9 @@ class Utils:
         resolver = RefResolver(f'file://{base_schemas_path}{stac_object.stac_version}/', None)
 
         validate(stac_object, stac_object._schema, resolver=resolver)
+
+    @staticmethod
+    def render_html(template_name, **kwargs):
+        """Render Jinja2 HTML template."""
+        template = templateEnv.get_template( template_name )
+        return template.render(**kwargs)

@@ -1,0 +1,70 @@
+<div>
+    <b> {{item.id}} </b>
+</div>
+<div>
+    <b>Collection:</b> {{item.collection}}
+</div>
+<div>
+    <b>Datetime:</b> {{item.properties['datetime']}}
+</div>
+<div>
+    <b>STAC Version:</b> {{item.stac_version}}
+</div>
+</br>
+<div>
+    <b>Thumbnail</b>:
+    <img src="{{item.assets['thumbnail']['href']}}" width="256">
+</div>
+
+</br>
+{% if 'eo:bands' in item.properties %}
+<b>Bands</b>
+<div>
+    <table>
+        <tr>
+        </tr>
+        <tr>
+            <th>name</th>
+            <th>common_name</th>
+            <th>min</th>
+            <th>max</th>
+            <th>nodata</th>
+            <th>scale</th>
+            <th>data_type</th>
+        </tr>
+        {% for band in item.properties['eo:bands']%}
+        <tr>
+            <td>{{band['name']}}</td>
+            <td>{{band['common_name']}}</td>
+            <td>{{band['min']}}</td>
+            <td>{{band['max']}}</td>
+            <td>{{band['nodata']}}</td>
+            <td>{{band['scale']}}</td>
+            <td>{{band['data_type']}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</br>
+{% endif %}
+<div>
+    <b>BBox</b>
+</div>
+<div>
+    <table>
+        <tr>
+            <th>xmin</th>
+            <th>ymin</th>
+            <th>xmax</th>
+            <th>ymax</th>
+        </tr>
+        <tr>
+            <td>{{item.bbox[0]}}</td>
+            <td>{{item.bbox[1]}}</td>
+            <td>{{item.bbox[2]}}</td>
+            <td>{{item.bbox[3]}}</td>
+        </tr>
+    </table>
+</div>
+</br>
+

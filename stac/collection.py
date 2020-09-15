@@ -166,3 +166,7 @@ class Collection(Catalog):
                 data = Utils._get(f'{link["href"]}', params=filter)
                 return ItemCollection(data)
         return ItemCollection({})
+
+    def _repr_html_(self):
+        """HTML repr."""
+        return Utils.render_html('collection.html', collection=self)

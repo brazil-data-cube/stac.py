@@ -189,6 +189,10 @@ class Item(dict):
         _schema = json.loads(schema)
         return _schema
 
+    def _repr_html_(self):
+        """HTML repr."""
+        return Utils.render_html('item.html', item=self)
+
 class ItemCollection(dict):
     """The GeoJSON Feature Collection of STAC Items."""
 
@@ -215,3 +219,7 @@ class ItemCollection(dict):
     def links(self):
         """:return: the Item Collection list of GeoJSON Features."""
         return [Link(i) for i in self['links']]
+
+    def _repr_html_(self):
+        """HTML repr."""
+        return Utils.render_html('itemcollection.html', itemcollection=self)

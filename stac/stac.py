@@ -118,6 +118,21 @@ class STAC:
         text = 'stac("{}")'.format(self.url)
         return text
 
+    def _repr_html_(self):
+        """HTML repr."""
+        collections = str()
+        for collection in self.catalog:
+            collections += f"<li>{collection}</li>"
+        return f"""<p>STAC</p>
+                    <ul>
+                     <li><b>URL:</b> {self._url}</li>
+                     <li><b>Collections:</b></li>
+                     <ul>
+                     {collections}
+                     </ul>
+                   </ul>
+               """
+
     def __str__(self):
         """Return the string representation of a STAC object."""
         return '<STAC [{}]>'.format(self.url)
