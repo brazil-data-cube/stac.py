@@ -56,7 +56,8 @@ setup_requires = [
 install_requires = [
     'Click>=7.0',
     'requests>=2.20',
-    'jsonschema>=3.2'
+    'jsonschema>=3.2',
+    'Jinja2>=2.11.1'
 ]
 
 packages = find_packages()

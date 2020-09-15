@@ -92,5 +92,6 @@ class Utils:
 
     @staticmethod
     def render_html(template_name, **kwargs):
+        """Render Jinja2 HTML template."""
         template = templateEnv.get_template( template_name )
         return template.render(**kwargs)
