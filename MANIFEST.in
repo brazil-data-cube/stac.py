@@ -24,5 +24,6 @@ recursive-include examples *.png
 recursive-include examples *.py
 recursive-include examples *.ipynb
 recursive-include stac/jsonschemas *.json
+recursive-include stac/templates *.html
 recursive-include tests *.py
 recursive-include tests *.json

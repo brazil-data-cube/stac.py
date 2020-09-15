@@ -8,11 +8,14 @@
 """Utility data structures and algorithms."""
 import json
 
+import jinja2
 import requests
 from jsonschema import RefResolver, validate
 from pkg_resources import resource_filename, resource_string
 
 base_schemas_path = resource_filename(__name__, 'jsonschemas/')
+templateLoader = jinja2.FileSystemLoader( searchpath=resource_filename(__name__, 'templates/'))
+templateEnv = jinja2.Environment( loader=templateLoader )
 
 class Utils:
     """Utils STAC object."""
@@ -68,3 +71,26 @@ class Utils:
         resolver = RefResolver(f'file://{base_schemas_path}{stac_object.stac_version}/', None)
 
         validate(stac_object, stac_object._schema, resolver=resolver)
+
+
+    @staticmethod
+    def dict_to_html(dd, level=0):
+        """Convert dict to html using ul/li tags."""
+        text = '<ul>'
+        if isinstance(dd, dict):
+            for k, v in dd.items():
+                text += '<li><b>%s</b>: %s</li>' % (k, Utils.dict_to_html(v, level+1) if isinstance(v, dict) else
+                                                      (Utils.dict_to_html(v, level+1) if isinstance(v, list) else v))
+        elif isinstance(dd, list):
+            for v in dd:
+                if isinstance(v, dict):
+                    Utils.dict_to_html(v, level+1)
+                else:
+                    text += '<li>%s</li>' % v
+        text += '</ul>'
+        return text
+
+    @staticmethod
+    def render_html(template_name, **kwargs):
+        template = templateEnv.get_template( template_name )
+        return template.render(**kwargs)
