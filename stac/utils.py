@@ -72,24 +72,6 @@ class Utils:
 
         validate(stac_object, stac_object._schema, resolver=resolver)
 
-
-    @staticmethod
-    def dict_to_html(dd, level=0):
-        """Convert dict to html using ul/li tags."""
-        text = '<ul>'
-        if isinstance(dd, dict):
-            for k, v in dd.items():
-                text += '<li><b>%s</b>: %s</li>' % (k, Utils.dict_to_html(v, level+1) if isinstance(v, dict) else
-                                                      (Utils.dict_to_html(v, level+1) if isinstance(v, list) else v))
-        elif isinstance(dd, list):
-            for v in dd:
-                if isinstance(v, dict):
-                    Utils.dict_to_html(v, level+1)
-                else:
-                    text += '<li>%s</li>' % v
-        text += '</ul>'
-        return text
-
     @staticmethod
     def render_html(template_name, **kwargs):
         """Render Jinja2 HTML template."""
