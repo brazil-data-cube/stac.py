@@ -126,7 +126,7 @@ class STAC:
         return f"""<p>STAC</p>
                     <ul>
                      <li><b>URL:</b> {self._url}</li>
-                     <li><b>Coverages:</b></li>
+                     <li><b>Collections:</b></li>
                      <ul>
                      {collections}
                      </ul>
