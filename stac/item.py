@@ -44,8 +44,9 @@ class Asset(dict):
         return self['type']
 
     def download(self, folder_path=None): # pragma: no cover
-        """
-        Download the asset to an indicated folder.
+        """Download the asset to an indicated folder.
+
+        If tqdm is installed a progressbar will be shown.
 
         :param folder_path: Folder path to download the asset, if left None,
                             the asset will be downloaded to the current
@@ -53,12 +54,24 @@ class Asset(dict):
         :return: path to downloaded file.
         """
         local_filename = urlparse(self['href'])[2].split('/')[-1]
+
         if folder_path is not None:
             folder_path += local_filename
 
-        with requests.get(self['href'], stream=True) as r:
-            with open(local_filename, 'wb') as f:
-                shutil.copyfileobj(r.raw, f)
+        response = requests.get(self['href'], stream=True)
+
+        try:
+            from tqdm import tqdm
+
+            with tqdm.wrapattr(open(folder_path if folder_path else local_filename, 'wb'), 'write', miniters=1,
+                        total=int(response.headers.get('content-length', 0)),
+                        desc=local_filename) as fout:
+                for chunk in response.iter_content(chunk_size=4096):
+                    fout.write(chunk)
+
+        except ImportError:
+            with open(folder_path if folder_path else local_filename, 'wb') as f:
+                shutil.copyfileobj(response.raw, f)
 
         return local_filename
 

@@ -9,6 +9,12 @@
 Changes
 =======
 
+Version 0.9.0-6
+---------------
+
+- Add tqdm progress bar to asset download
+
+
 Version 0.9.0-5
 ---------------
 

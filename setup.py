@@ -45,6 +45,7 @@ extras_require = {
     'examples': examples_require,
     'oauth': ['requests_oauthlib>=1.3'],
     'tests': tests_require,
+    'tqdm': 'tqdm>=4.49.0',
 }
 
 extras_require['all'] = [req for exts, reqs in extras_require.items() for req in reqs]
