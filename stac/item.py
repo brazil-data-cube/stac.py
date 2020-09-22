@@ -193,6 +193,23 @@ class Item(dict):
         """HTML repr."""
         return Utils.render_html('item.html', item=self)
 
+    def read(self, band_name, window=None):
+        """Read an asset given a band name.
+
+        :param band_name: Band name used in the asset
+        :type band_name: str
+        :param window: window crop
+        :type window: raster.windows.Window
+        :return: the asset as a numpy array
+        :rtype: numpy.ndarray
+        """
+        import rasterio
+
+        with rasterio.open(self.assets[band_name]['href']) as dataset:
+            asset = dataset.read(1, window=window)
+
+        return asset
+
 class ItemCollection(dict):
     """The GeoJSON Feature Collection of STAC Items."""
 
@@ -223,3 +240,11 @@ class ItemCollection(dict):
     def _repr_html_(self):
         """HTML repr."""
         return Utils.render_html('itemcollection.html', itemcollection=self)
+
+    def __iter__(self):
+        """Feature iterator."""
+        return self.features.__iter__()
+
+    def __next__(self):
+        """Next Feature iterator."""
+        return next(self.features)
