@@ -9,6 +9,13 @@
 Changes
 =======
 
+Version 0.9.0-5
+---------------
+
+Released 2020-09-22
+
+- Add feature iterator on ItemCollection
+- Add function to read Item as numpy array
 
 Version 0.9.0-4
 ---------------
