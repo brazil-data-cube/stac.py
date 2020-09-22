@@ -8,7 +8,7 @@ import stac
 from matplotlib import pyplot
 
 #%%
-s = stac.STAC('http://localhost:5000', False)
+s = stac.STAC('http://brazildatacube.dpi.inpe.br/stac/', False)
 
 #%%
 s.catalog

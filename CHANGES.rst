@@ -9,6 +9,29 @@
 Changes
 =======
 
+Version 0.9.0-6
+---------------
+
+- Add tqdm progress bar to asset download
+
+
+Version 0.9.0-5
+---------------
+
+Released 2020-09-22
+
+- Add feature iterator on ItemCollection
+- Add function to read Item as numpy array
+
+Version 0.9.0-4
+---------------
+
+
+Released 2020-09-15
+
+
+- Add Jupyter integration: #47.
+
 
 Version 0.9.0-3
 ---------------

@@ -44,8 +44,9 @@ class Asset(dict):
         return self['type']
 
     def download(self, folder_path=None): # pragma: no cover
-        """
-        Download the asset to an indicated folder.
+        """Download the asset to an indicated folder.
+
+        If tqdm is installed a progressbar will be shown.
 
         :param folder_path: Folder path to download the asset, if left None,
                             the asset will be downloaded to the current
@@ -53,12 +54,24 @@ class Asset(dict):
         :return: path to downloaded file.
         """
         local_filename = urlparse(self['href'])[2].split('/')[-1]
+
         if folder_path is not None:
             folder_path += local_filename
 
-        with requests.get(self['href'], stream=True) as r:
-            with open(local_filename, 'wb') as f:
-                shutil.copyfileobj(r.raw, f)
+        response = requests.get(self['href'], stream=True)
+
+        try:
+            from tqdm import tqdm
+
+            with tqdm.wrapattr(open(folder_path if folder_path else local_filename, 'wb'), 'write', miniters=1,
+                        total=int(response.headers.get('content-length', 0)),
+                        desc=local_filename) as fout:
+                for chunk in response.iter_content(chunk_size=4096):
+                    fout.write(chunk)
+
+        except ImportError:
+            with open(folder_path if folder_path else local_filename, 'wb') as f:
+                shutil.copyfileobj(response.raw, f)
 
         return local_filename
 
@@ -189,6 +202,27 @@ class Item(dict):
         _schema = json.loads(schema)
         return _schema
 
+    def _repr_html_(self):
+        """HTML repr."""
+        return Utils.render_html('item.html', item=self)
+
+    def read(self, band_name, window=None):
+        """Read an asset given a band name.
+
+        :param band_name: Band name used in the asset
+        :type band_name: str
+        :param window: window crop
+        :type window: raster.windows.Window
+        :return: the asset as a numpy array
+        :rtype: numpy.ndarray
+        """
+        import rasterio
+
+        with rasterio.open(self.assets[band_name]['href']) as dataset:
+            asset = dataset.read(1, window=window)
+
+        return asset
+
 class ItemCollection(dict):
     """The GeoJSON Feature Collection of STAC Items."""
 
@@ -215,3 +249,15 @@ class ItemCollection(dict):
     def links(self):
         """:return: the Item Collection list of GeoJSON Features."""
         return [Link(i) for i in self['links']]
+
+    def _repr_html_(self):
+        """HTML repr."""
+        return Utils.render_html('itemcollection.html', itemcollection=self)
+
+    def __iter__(self):
+        """Feature iterator."""
+        return self.features.__iter__()
+
+    def __next__(self):
+        """Next Feature iterator."""
+        return next(self.features)

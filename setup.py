@@ -45,6 +45,7 @@ extras_require = {
     'examples': examples_require,
     'oauth': ['requests_oauthlib>=1.3'],
     'tests': tests_require,
+    'tqdm': ['tqdm>=4.49.0'],
 }
 
 extras_require['all'] = [req for exts, reqs in extras_require.items() for req in reqs]
@@ -56,7 +57,8 @@ setup_requires = [
 install_requires = [
     'Click>=7.0',
     'requests>=2.20',
-    'jsonschema>=3.2'
+    'jsonschema>=3.2',
+    'Jinja2>=2.11.1'
 ]
 
 packages = find_packages()

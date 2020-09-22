@@ -1,0 +1,74 @@
+<div>
+    <b>Collection:</b> {{collection.id}}
+</div>
+<div>
+    <b>Description:</b> {{collection.description}}
+</div>
+<div>
+    <b>Start date:</b> {{collection.extent['temporal']['interval'][0][0]}}
+    <b>End date:</b> {{collection.extent['temporal']['interval'][0][1]}}
+</div>
+<div>
+    <b>STAC Version:</b> {{collection.stac_version}}
+</div>
+</br>
+{% if 'eo:bands' in collection.properties %}
+<b>Bands</b>
+<div>
+    <table>
+        <tr>
+        </tr>
+        <tr>
+            <th>name</th>
+            <th>common_name</th>
+            <th>min</th>
+            <th>max</th>
+            <th>nodata</th>
+            <th>scale</th>
+            <th>data_type</th>
+        </tr>
+        {% for band in collection.properties['eo:bands']%}
+        <tr>
+            <td>{{band['name']}}</td>
+            <td>{{band['common_name']}}</td>
+            <td>{{band['min']}}</td>
+            <td>{{band['max']}}</td>
+            <td>{{band['nodata']}}</td>
+            <td>{{band['scale']}}</td>
+            <td>{{band['data_type']}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</br>
+{% endif %}
+<div>
+    <b>Extent</b>
+</div>
+<div>
+    <table>
+        <tr>
+            <th>xmin</th>
+            <th>ymin</th>
+            <th>xmax</th>
+            <th>ymax</th>
+        </tr>
+        <tr>
+            <td>{{collection.extent['spatial']['bbox'][0][0]}}</td>
+            <td>{{collection.extent['spatial']['bbox'][0][1]}}</td>
+            <td>{{collection.extent['spatial']['bbox'][0][2]}}</td>
+            <td>{{collection.extent['spatial']['bbox'][0][3]}}</td>
+        </tr>
+    </table>
+</div>
+</br>
+{% if 'cube:dimensions' in collection %}
+<div>
+    <div><b>Timeline</b></div>
+    <select id="timeline" size="10">
+        {% for time in collection['cube:dimensions']['temporal']['values'] %}
+        <option value="{{ time }}">{{ time }}</option>\n
+        {% endfor %}
+    </select>
+</div>
+{% endif %}
