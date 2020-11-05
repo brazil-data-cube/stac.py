@@ -20,9 +20,7 @@ recursive-include docs *.png
 recursive-include docs *.py
 recursive-include docs *.rst
 recursive-include docs Makefile
-recursive-include examples *.png
 recursive-include examples *.py
-recursive-include examples *.ipynb
 recursive-include stac/jsonschemas *.json
 recursive-include stac/templates *.html
 recursive-include tests *.py
