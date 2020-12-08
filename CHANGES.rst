@@ -12,8 +12,10 @@ Changes
 Version 0.9.0-6
 ---------------
 
-- Add tqdm progress bar to asset download
+Released 2020-12-08
 
+- Add tqdm progress bar to asset download
+- Add collections to stac
 
 Version 0.9.0-5
 ---------------

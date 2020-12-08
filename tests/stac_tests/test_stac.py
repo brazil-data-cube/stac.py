@@ -88,6 +88,17 @@ class TestStac:
             assert s._catalog.links[0].rel
             assert response == ['my_collection1']
 
+    def test_collections(self, stac_objects, requests_mock):
+        for k in stac_objects:
+            s = stac.STAC(url + "/stac" if k != '0.9.0' else url, True)
+            requests_mock.get(match_url,
+                              json=dict(collections=[stac_objects[k]['collection.json']]),
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            response = s.collections
+            assert response['my_collection1']
+
     def test_collection(self, stac_objects, requests_mock):
         for k in stac_objects:
             s = stac.STAC(url + "/stac" if k != '0.9.0' else url, True)
