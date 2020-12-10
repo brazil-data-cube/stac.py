@@ -70,6 +70,21 @@ class STAC:
                     self._collections[i.href.split('/')[-1]] = None
         return list(self._collections.keys())
 
+
+    @property
+    def collections(self):
+        """Return all available collections.
+
+        :returns: A dict containing all collections.
+        :rype: dict
+        """
+        url = '/'.join(self._url.split('/')[:-1]) if self._url.endswith('/stac') else self._url
+        data = Utils._get(f'{url}/collections{self._access_token}')
+        self._collections = {collection['id']: Collection(collection, self._validate) for collection in data['collections']}
+
+        return self._collections
+
+
     def collection(self, collection_id):
         """Return the given collection.
 
