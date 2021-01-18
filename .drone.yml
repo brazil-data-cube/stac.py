@@ -19,7 +19,7 @@ steps:
       - coverage.xml
       - .coverage
   depends_on:
-    - build
+    - test
   when:
     event:
       - tag
