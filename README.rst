@@ -16,14 +16,14 @@ Python Client Library for STAC
         :alt: Software License
 
 
-.. image:: https://travis-ci.com/brazil-data-cube/stac.py.svg?branch=master
-        :target: https://travis-ci.com/brazil-data-cube/stac.py
+.. image:: https://drone.dpi.inpe.br/api/badges/brazil-data-cube/stac.py/status.svg
+        :target: https://drone.dpi.inpe.br/api/badges/brazil-data-cube/stac.py
         :alt: Build Status
 
 
-.. image:: https://coveralls.io/repos/github/brazil-data-cube/stac.py/badge.svg?branch=master
-        :target: https://coveralls.io/github/brazil-data-cube/stac.py?branch=master
-        :alt: Code Coverage Test
+.. image:: https://codecov.io/gh/brazil-data-cube/stac.py/branch/master/graph/badge.svg?token=WWQ3HQAUKK
+        :target: https://codecov.io/gh/brazil-data-cube/stac.py
+        :alt: Code Coverage
 
 
 .. image:: https://readthedocs.org/projects/stacpy/badge/?version=latest
