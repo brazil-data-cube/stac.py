@@ -20,7 +20,7 @@ steps:
       - .coverage
   when:
     event:
-      - tag
+      - push
 
 - name: pypi
   image: plugins/pypi
@@ -29,7 +29,7 @@ steps:
       from_secret: pypi_user
     password:
       from_secret: pypi_pass
-    repository: https://test.pypi.org/legacy/
+    repository: https://upload.pypi.org/legacy/
     distributions:
       - sdist
   when:
