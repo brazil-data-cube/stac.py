@@ -8,6 +8,7 @@
 """STAC Item module."""
 
 import json
+import os
 import shutil
 from urllib.parse import urlparse
 
@@ -43,37 +44,38 @@ class Asset(dict):
         """:return: the Asset type."""
         return self['type']
 
-    def download(self, folder_path=None): # pragma: no cover
+    def download(self, dir=None): # pragma: no cover
         """Download the asset to an indicated folder.
 
         If tqdm is installed a progressbar will be shown.
 
-        :param folder_path: Folder path to download the asset, if left None,
-                            the asset will be downloaded to the current
-                            working directory.
+        :param dir: Directory path to download the asset, if left None,
+                    the asset will be downloaded to the current
+                    working directory.
         :return: path to downloaded file.
         """
-        local_filename = urlparse(self['href'])[2].split('/')[-1]
+        filename = urlparse(self['href'])[2].split('/')[-1]
 
-        if folder_path is not None:
-            folder_path += local_filename
+        if dir:
+            filename = os.path.join(dir, filename)
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
 
         response = requests.get(self['href'], stream=True)
 
         try:
             from tqdm import tqdm
 
-            with tqdm.wrapattr(open(folder_path if folder_path else local_filename, 'wb'), 'write', miniters=1,
+            with tqdm.wrapattr(open(filename, 'wb'), 'write', miniters=1,
                         total=int(response.headers.get('content-length', 0)),
-                        desc=local_filename) as fout:
+                        desc=filename) as fout:
                 for chunk in response.iter_content(chunk_size=4096):
                     fout.write(chunk)
 
         except ImportError:
-            with open(folder_path if folder_path else local_filename, 'wb') as f:
+            with open(filename, 'wb') as f:
                 shutil.copyfileobj(response.raw, f)
 
-        return local_filename
+        return filename
 
 
 class Geometry(dict):
