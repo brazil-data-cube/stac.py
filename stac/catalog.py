@@ -26,8 +26,13 @@ class Catalog(dict):
         """
         self._validate = validate
         super(Catalog, self).__init__(data or {})
+
+        self._schema = json.loads(resource_string(__name__, f'jsonschemas/{self.stac_version}/catalog.json'))
+
         if self._validate:
             Utils.validate(self)
+
+        self._links = [Link(link) for link in self['links']] if 'links' in self else []
 
     @property
     def stac_version(self):
@@ -52,11 +57,9 @@ class Catalog(dict):
     @property
     def links(self):
         """:return: a list of resources in the catalog."""
-        return [Link(link) for link in self['links']]
+        return self._links
 
     @property
-    def _schema(self):
+    def schema(self):
         """:return: the Catalog jsonschema."""
-        schema = resource_string(__name__, f'jsonschemas/{self.stac_version}/catalog.json')
-        _schema = json.loads(schema)
-        return _schema
+        return self._schema
