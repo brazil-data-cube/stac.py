@@ -62,6 +62,8 @@ class Asset(dict):
 
         response = requests.get(self['href'], stream=True)
 
+        response.raise_for_status()
+
         try:
             from tqdm import tqdm
 
@@ -212,6 +214,18 @@ class Item(dict):
     def _repr_html_(self): # pragma: no cover
         """HTML repr."""
         return Utils.render_html('item.html', item=self)
+
+    def download(self, band_name, dir=None): # pragma: no cover
+        """Download an asset given a band name.
+
+        :param band_name: Band name used in the asset
+        :type band_name: str
+        :param dir: Directory path to download the asset, if left None,
+                    the asset will be downloaded to the current
+                    working directory.
+        :return: path to downloaded file.
+        """
+        return self.assets[band_name].download(dir=dir)
 
     def read(self, band_name, window=None): # pragma: no cover
         """Read an asset given a band name.
