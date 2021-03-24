@@ -46,6 +46,10 @@ extras_require = {
     'oauth': ['requests_oauthlib>=1.3'],
     'tests': tests_require,
     'tqdm': ['tqdm>=4.49.0'],
+    'geo': [
+        'rasterio>=1.1',
+        'Shapely>=1.7,<2'
+    ]
 }
 
 extras_require['all'] = [req for exts, reqs in extras_require.items() for req in reqs]

@@ -10,6 +10,7 @@
 import json
 import os
 import shutil
+from collections import Iterable
 from urllib.parse import urlparse
 
 import requests
@@ -229,19 +230,53 @@ class Item(dict):
 
         return output
 
-    def read(self, band_name, window=None): # pragma: no cover
+    def read(self, band_name, window=None, bbox=None, crs=None): # pragma: no cover
         """Read an asset given a band name.
+
+        Notes:
+            You must install the extra `geo` containing the `rasterio` and `Shapely` library
+            in order to use this method:
+
+                pip install stac.py[geo]
 
         :param band_name: Band name used in the asset
         :type band_name: str
         :param window: window crop
         :type window: raster.windows.Window
+        :param bbox: The bounding box
+        :type bbox: Union[str,Tuple[float],List[float],BaseGeometry]
+        :param crs: The Coordinate Reference System
         :return: the asset as a numpy array
         :rtype: numpy.ndarray
         """
         import rasterio
+        from rasterio.crs import CRS
+        from rasterio.warp import transform
+        from rasterio.windows import from_bounds
+        from shapely.geometry import box
+        from shapely.geometry.base import BaseGeometry
 
         with rasterio.open(self.assets[band_name]['href']) as dataset:
+            if bbox:
+                if isinstance(bbox, str):
+                    bbox = [float(elm) for elm in bbox.split(',')]
+
+                if isinstance(bbox, Iterable):
+                    bbox = box(*bbox)
+
+                if not isinstance(bbox, BaseGeometry):
+                    raise TypeError(f'Invalid bbox {bbox}')
+
+                w, s, e, n = bbox.bounds
+
+                source_crs = CRS.from_string('EPSG:4326')
+
+                if crs:
+                    source_crs = CRS.from_string(crs)
+
+                t = transform(source_crs, dataset.crs, [w, e], [s, n])
+                window = from_bounds(t[0][0], t[1][0], t[0][1], t[1][1], dataset.transform)
+
             asset = dataset.read(1, window=window)
 
         return asset
