@@ -1,6 +1,6 @@
 #
 # This file is part of Python Client Library for STAC.
-# Copyright (C) 2019 INPE.
+# Copyright (C) 2019-2021 INPE.
 #
 # Python Client Library for STAC is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -70,10 +70,10 @@ class Utils:
         """
         resolver = RefResolver(f'file://{base_schemas_path}{stac_object.stac_version}/', None)
 
-        validate(stac_object, stac_object._schema, resolver=resolver)
+        validate(stac_object, stac_object.schema, resolver=resolver)
 
     @staticmethod
-    def render_html(template_name, **kwargs):
+    def render_html(template_name, **kwargs): # pragma: no cover
         """Render Jinja2 HTML template."""
         template = templateEnv.get_template( template_name )
         return template.render(**kwargs)

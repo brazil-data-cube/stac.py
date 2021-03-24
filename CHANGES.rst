@@ -1,6 +1,6 @@
 ..
     This file is part of Python Client Library for STAC.
-    Copyright (C) 2019-2020 INPE.
+    Copyright (C) 2019-2021 INPE.
 
     Python Client Library for STAC is free software; you can redistribute it and/or modify it
     under the terms of the MIT License; see LICENSE file for more details.
@@ -9,11 +9,28 @@
 Changes
 =======
 
+
+Version 0.9.0-7 (2021-03-24)
+----------------------------
+
+
+API improvements:
+
+- Download all assets from an item (`#66 <https://github.com/brazil-data-cube/stac.py/issues/66>`_).
+
+- Add a way for reading partial raster given an envelope in a specific CRS (`#71 <https://github.com/brazil-data-cube/stac.py/issues/71>`_).
+
+- Fix download folder creation in asset (`#64 <https://github.com/brazil-data-cube/stac.py/issues/64>`_).
+
+- Add Drone integration (`#60 <https://github.com/brazil-data-cube/stac.py/issues/60>`_).
+
+
 Version 0.9.0-6 (2020-12-10)
 ----------------------------
 
 
 - Add tqdm progress bar to asset download (`#52 <https://github.com/brazil-data-cube/stac.py/pull/52>`_).
+
 - Add collections to stac (`#55 <https://github.com/brazil-data-cube/stac.py/issues/55>`_).
 
 
@@ -22,6 +39,7 @@ Version 0.9.0-5 (2020-09-22)
 
 
 - Add feature iterator on ItemCollection (`#50 <https://github.com/brazil-data-cube/stac.py/pull/50>`_).
+
 - Add function to read Item as numpy array (`#50 <https://github.com/brazil-data-cube/stac.py/pull/50>`_).
 
 
@@ -44,7 +62,6 @@ Version 0.9.0-2 (2020-09-10)
 
 
 - Bug fix: properly handle query parameter (`#42 <https://github.com/brazil-data-cube/stac.py/issues/42>`_).
-
 
 
 Version 0.9.0-1 (2020-09-01)
@@ -107,4 +124,4 @@ Version 0.7.0-0 (2020-02-27)
 
 - Source code versioning based on `Semantic Versioning 2.0.0 <https://semver.org/>`_.
 
-- License: `MIT <https://raw.githubusercontent.com/brazil-data-cube/stac.py/v0.7.0-0/LICENSE>`_.
+- License: `MIT <https://github.com/brazil-data-cube/stac.py/blob/master/LICENSE>`_.

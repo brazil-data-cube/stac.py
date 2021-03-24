@@ -1,6 +1,6 @@
 #
 # This file is part of Python Client Library for STAC.
-# Copyright (C) 2019-2020 INPE.
+# Copyright (C) 2019-2021 INPE.
 #
 # Python Client Library for STAC is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -59,15 +59,16 @@ exclude_patterns = [
 # The theme to use for HTML and HTML Help pages.
 html_theme = 'sphinx_rtd_theme'
 
+html_baseurl = 'https://brazil-data-cube.github.io/'
+
 html_theme_options = {
-    'html_baseurl': 'https://brazil-data-cube.github.io/',
     'analytics_id': 'XXXXXXXXXX',
     'logo_only': False,
     'display_version': True,
     'prev_next_buttons_location': 'both',
     'style_external_links': True,
     #'vcs_pageview_mode': 'edit',
-    'github_url': 'https://github.com/brazil-data-cube/stac.py',
+    #'github_url': 'https://github.com/brazil-data-cube/stac.py',
     'style_nav_header_background': '#2980B9',
     'collapse_navigation': True,
     'sticky_navigation': False,

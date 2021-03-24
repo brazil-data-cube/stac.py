@@ -1,6 +1,6 @@
 #
 # This file is part of Python Client Library for STAC.
-# Copyright (C) 2019 INPE.
+# Copyright (C) 2019-2021 INPE.
 #
 # Python Client Library for STAC is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -13,4 +13,4 @@ and parsed by ``setup.py``.
 """
 
 
-__version__ = '0.9.0-6'
+__version__ = '0.9.0-7'
