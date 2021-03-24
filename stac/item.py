@@ -10,7 +10,7 @@
 import json
 import os
 import shutil
-from collections import Iterable
+from collections.abc import Iterable
 from urllib.parse import urlparse
 
 import requests
