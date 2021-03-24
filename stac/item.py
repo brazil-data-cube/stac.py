@@ -215,17 +215,19 @@ class Item(dict):
         """HTML repr."""
         return Utils.render_html('item.html', item=self)
 
-    def download(self, band_name, dir=None): # pragma: no cover
+    def download(self, dir=None): # pragma: no cover
         """Download an asset given a band name.
 
-        :param band_name: Band name used in the asset
-        :type band_name: str
         :param dir: Directory path to download the asset, if left None,
                     the asset will be downloaded to the current
                     working directory.
         :return: path to downloaded file.
         """
-        return self.assets[band_name].download(dir=dir)
+        output = dict()
+        for asset_name, asset in self.assets.items():
+            output[asset_name] = asset.download(dir=dir)
+
+        return output
 
     def read(self, band_name, window=None): # pragma: no cover
         """Read an asset given a band name.
