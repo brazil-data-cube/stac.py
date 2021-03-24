@@ -14,7 +14,7 @@ s = stac.STAC('http://brazildatacube.dpi.inpe.br/stac/', False)
 s.catalog
 
 #%%
-collection = s.collection(s.catalog[0])
+collection = s.collection('CB4_64_16D_STK-1')
 collection
 
 #%%
