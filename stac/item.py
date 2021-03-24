@@ -253,19 +253,10 @@ class Item(dict):
         from rasterio.crs import CRS
         from rasterio.warp import transform
         from rasterio.windows import from_bounds
-        from shapely.geometry import box
-        from shapely.geometry.base import BaseGeometry
 
         with rasterio.open(self.assets[band_name]['href']) as dataset:
             if bbox:
-                if isinstance(bbox, str):
-                    bbox = [float(elm) for elm in bbox.split(',')]
-
-                if isinstance(bbox, Iterable):
-                    bbox = box(*bbox)
-
-                if not isinstance(bbox, BaseGeometry) or bbox.is_empty:
-                    raise TypeError(f'Invalid bbox {bbox}')
+                bbox = Utils.build_bbox(bbox)
 
                 w, s, e, n = bbox.bounds
 

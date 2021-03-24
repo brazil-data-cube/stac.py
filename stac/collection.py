@@ -162,6 +162,9 @@ class Collection(Catalog):
 
         :return: A GeoJSON FeatureCollection of STAC Items from the collection.
         """
+        if filter is not None and 'bbox' in filter:
+            filter['bbox'] = Utils.build_bbox_as_str(filter['bbox'])
+
         for link in self['links']:
             if link['rel'] == 'items':
                 if item_id is not None:
