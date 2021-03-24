@@ -120,6 +120,9 @@ class STAC:
 
         url = f'{self._url}/search{self._access_token}'
 
+        if filter is not None and 'bbox' in filter:
+            filter['bbox'] = Utils.build_bbox_as_str(filter['bbox'])
+
         data = Utils._get(url, params=filter)
         return ItemCollection(data, self._validate)
 
