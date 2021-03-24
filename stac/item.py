@@ -264,7 +264,7 @@ class Item(dict):
                 if isinstance(bbox, Iterable):
                     bbox = box(*bbox)
 
-                if not isinstance(bbox, BaseGeometry):
+                if not isinstance(bbox, BaseGeometry) or bbox.is_empty:
                     raise TypeError(f'Invalid bbox {bbox}')
 
                 w, s, e, n = bbox.bounds
