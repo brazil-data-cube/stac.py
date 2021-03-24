@@ -133,7 +133,7 @@ class STAC:
         text = 'stac("{}")'.format(self.url)
         return text
 
-    def _repr_html_(self):
+    def _repr_html_(self): # pragma: no cover
         """HTML repr."""
         collections = str()
         for collection in self.catalog:

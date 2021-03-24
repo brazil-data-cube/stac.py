@@ -8,7 +8,9 @@
 """STAC Item module."""
 
 import json
+import os
 import shutil
+from collections.abc import Iterable
 from urllib.parse import urlparse
 
 import requests
@@ -43,37 +45,40 @@ class Asset(dict):
         """:return: the Asset type."""
         return self['type']
 
-    def download(self, folder_path=None): # pragma: no cover
+    def download(self, dir=None): # pragma: no cover
         """Download the asset to an indicated folder.
 
         If tqdm is installed a progressbar will be shown.
 
-        :param folder_path: Folder path to download the asset, if left None,
-                            the asset will be downloaded to the current
-                            working directory.
+        :param dir: Directory path to download the asset, if left None,
+                    the asset will be downloaded to the current
+                    working directory.
         :return: path to downloaded file.
         """
-        local_filename = urlparse(self['href'])[2].split('/')[-1]
+        filename = urlparse(self['href'])[2].split('/')[-1]
 
-        if folder_path is not None:
-            folder_path += local_filename
+        if dir:
+            filename = os.path.join(dir, filename)
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
 
         response = requests.get(self['href'], stream=True)
+
+        response.raise_for_status()
 
         try:
             from tqdm import tqdm
 
-            with tqdm.wrapattr(open(folder_path if folder_path else local_filename, 'wb'), 'write', miniters=1,
+            with tqdm.wrapattr(open(filename, 'wb'), 'write', miniters=1,
                         total=int(response.headers.get('content-length', 0)),
-                        desc=local_filename) as fout:
+                        desc=filename) as fout:
                 for chunk in response.iter_content(chunk_size=4096):
                     fout.write(chunk)
 
         except ImportError:
-            with open(folder_path if folder_path else local_filename, 'wb') as f:
+            with open(filename, 'wb') as f:
                 shutil.copyfileobj(response.raw, f)
 
-        return local_filename
+        return filename
 
 
 class Geometry(dict):
@@ -105,6 +110,7 @@ class Properties(dict):
         :param data: Dict with Properties metadata.
         """
         super(Properties, self).__init__(data or {})
+        self._providers = [Provider(p) for p in self['providers']] if 'providers' in self else []
 
     @property
     def datetime(self):
@@ -119,7 +125,7 @@ class Properties(dict):
     @property
     def providers(self):
         """:return: the providers property."""
-        return [Provider(p) for p in self['providers']]
+        return self._providers
 
     @property
     def title(self):
@@ -147,8 +153,14 @@ class Item(dict):
         """
         self._validate = validate
         super(Item, self).__init__(data or {})
+
+        self._schema = json.loads(resource_string(__name__, f'jsonschemas/{self.stac_version}/item.json'))
+
         if self._validate:
             Utils.validate(self)
+
+        self._assets = {key: Asset(value) for key,value in self['assets'].items()} if 'assets' in self else {}
+        self._links = [Link(link) for link in self['links']] if 'links' in self else []
 
     @property
     def stac_version(self):
@@ -188,37 +200,83 @@ class Item(dict):
     @property
     def links(self):
         """:return: the Item related links."""
-        return [Link(link) for link in self['links']]
+        return self._links
 
     @property
     def assets(self):
         """:return: the Item related assets."""
-        return {key: Asset(value) for key,value in self['assets'].items()}
+        return self._assets
 
     @property
-    def _schema(self):
+    def schema(self):
         """:return: the Collection jsonschema."""
-        schema = resource_string(__name__, f'jsonschemas/{self.stac_version}/item.json')
-        _schema = json.loads(schema)
-        return _schema
+        return self._schema
 
-    def _repr_html_(self):
+    def _repr_html_(self): # pragma: no cover
         """HTML repr."""
         return Utils.render_html('item.html', item=self)
 
-    def read(self, band_name, window=None):
+    def download(self, dir=None): # pragma: no cover
+        """Download an asset given a band name.
+
+        :param dir: Directory path to download the asset, if left None,
+                    the asset will be downloaded to the current
+                    working directory.
+        :return: path to downloaded file.
+        """
+        output = dict()
+        for asset_name, asset in self.assets.items():
+            output[asset_name] = asset.download(dir=dir)
+
+        return output
+
+    def read(self, band_name, window=None, bbox=None, crs=None): # pragma: no cover
         """Read an asset given a band name.
+
+        Notes:
+            You must install the extra `geo` containing the `rasterio` and `Shapely` library
+            in order to use this method:
+
+                pip install stac.py[geo]
 
         :param band_name: Band name used in the asset
         :type band_name: str
         :param window: window crop
         :type window: raster.windows.Window
+        :param bbox: The bounding box
+        :type bbox: Union[str,Tuple[float],List[float],BaseGeometry]
+        :param crs: The Coordinate Reference System
         :return: the asset as a numpy array
         :rtype: numpy.ndarray
         """
         import rasterio
+        from rasterio.crs import CRS
+        from rasterio.warp import transform
+        from rasterio.windows import from_bounds
+        from shapely.geometry import box
+        from shapely.geometry.base import BaseGeometry
 
         with rasterio.open(self.assets[band_name]['href']) as dataset:
+            if bbox:
+                if isinstance(bbox, str):
+                    bbox = [float(elm) for elm in bbox.split(',')]
+
+                if isinstance(bbox, Iterable):
+                    bbox = box(*bbox)
+
+                if not isinstance(bbox, BaseGeometry) or bbox.is_empty:
+                    raise TypeError(f'Invalid bbox {bbox}')
+
+                w, s, e, n = bbox.bounds
+
+                source_crs = CRS.from_string('EPSG:4326')
+
+                if crs:
+                    source_crs = CRS.from_string(crs)
+
+                t = transform(source_crs, dataset.crs, [w, e], [s, n])
+                window = from_bounds(t[0][0], t[1][0], t[0][1], t[1][1], dataset.transform)
+
             asset = dataset.read(1, window=window)
 
         return asset
@@ -235,6 +293,9 @@ class ItemCollection(dict):
         self._validate = validate
         super(ItemCollection, self).__init__(data or {})
 
+        self._features = [Item(i, self._validate) for i in self['features']] if 'features' in self else []
+        self._links = [Link(i) for i in self['links']] if 'links' in self else []
+
     @property
     def type(self):
         """:return: the Item Collection type."""
@@ -243,21 +304,21 @@ class ItemCollection(dict):
     @property
     def features(self):
         """:return: the Item Collection list of GeoJSON Features."""
-        return [Item(i, self._validate) for i in self['features']]
+        return self._features
 
     @property
     def links(self):
         """:return: the Item Collection list of GeoJSON Features."""
-        return [Link(i) for i in self['links']]
+        return self._links
 
-    def _repr_html_(self):
+    def _repr_html_(self): # pragma: no cover
         """HTML repr."""
         return Utils.render_html('itemcollection.html', itemcollection=self)
 
-    def __iter__(self):
+    def __iter__(self): # pragma: no cover
         """Feature iterator."""
         return self.features.__iter__()
 
-    def __next__(self):
+    def __next__(self): # pragma: no cover
         """Next Feature iterator."""
         return next(self.features)

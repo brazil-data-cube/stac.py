@@ -102,8 +102,15 @@ class Collection(Catalog):
         """
         self._validate = validate
         super(Collection, self).__init__(data or {}, validate)
+
+        self._schema = json.loads(resource_string(__name__, f'jsonschemas/{self.stac_version}/collection.json'))
+
         if self._validate:
             Utils.validate(self)
+
+        self._summaries = {k: Stats(v) for k, v in self['summaries'].items()} if 'summaries' in self else {}
+        self._providers = [Provider(provider) for provider in self['providers']] if 'providers' in self else []
+
 
     @property
     def keywords(self):
@@ -123,8 +130,7 @@ class Collection(Catalog):
     @property
     def providers(self):
         """:return: the Collection list of providers."""
-        return [Provider(provider) for provider in self['providers']]
-
+        return self._providers
     @property
     def extent(self):
         """:return: the Collection extent."""
@@ -138,14 +144,12 @@ class Collection(Catalog):
     @property
     def summaries(self):
         """:return: the Collection summaries."""
-        return {k: Stats(v) for k, v in self['summaries'].items()}
+        return self._summaries
 
     @property
-    def _schema(self):
+    def schema(self):
         """:return: the Collection jsonschema."""
-        schema = resource_string(__name__, f'jsonschemas/{self.stac_version}/collection.json')
-        _schema = json.loads(schema)
-        return _schema
+        return self._schema
 
     def get_items(self, item_id=None, filter=None):
         """Retrieve items of the collection.
@@ -167,6 +171,6 @@ class Collection(Catalog):
                 return ItemCollection(data)
         return ItemCollection({})
 
-    def _repr_html_(self):
+    def _repr_html_(self): # pragma: no cover
         """HTML repr."""
         return Utils.render_html('collection.html', collection=self)
