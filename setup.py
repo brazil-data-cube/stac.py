@@ -48,7 +48,6 @@ extras_require = {
     'tqdm': ['tqdm>=4.49.0'],
     'geo': [
         'rasterio>=1.1',
-        'Shapely>=1.7,<2'
     ]
 }
 
@@ -61,6 +60,7 @@ setup_requires = [
 install_requires = [
     'Click>=7.0',
     'requests>=2.20',
+    'Shapely>=1.7,<2',
     'jsonschema>=3.2',
     'Jinja2>=2.11.1'
 ]
