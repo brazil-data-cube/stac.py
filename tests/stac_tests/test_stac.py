@@ -258,6 +258,20 @@ class TestStac:
 
             assert response.features[0].id == 'feature1'
 
+    def test_empty_bbox(self, stac_objects, requests_mock):
+        for k in stac_objects:
+            s = stac.STAC(url + "/stac" if k != '0.9.0' else url, True)
+
+            requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            with pytest.raises(TypeError):
+                s.search(filter={"bbox": ""})
+
+            with pytest.raises(TypeError):
+                s.search(filter={"bbox": -90})
+
 class TestCli:
     def test_catalog(self, stac_objects, requests_mock, runner):
         for k in stac_objects:

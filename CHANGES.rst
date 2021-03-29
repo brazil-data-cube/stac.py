@@ -10,6 +10,18 @@ Changes
 =======
 
 
+Version 0.9.0-9 (2021-03-29)
+----------------------------
+
+- Fix package installation, adding Shapely as required dependency (`#78 <https://github.com/brazil-data-cube/stac.py/issues/78>`_).
+
+
+Version 0.9.0-8 (2021-03-24)
+----------------------------
+
+- Add common way for dealing with minimum bounding region in search (`#75 <https://github.com/brazil-data-cube/stac.py/issues/75>`_).
+
+
 Version 0.9.0-7 (2021-03-24)
 ----------------------------
 

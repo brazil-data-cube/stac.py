@@ -6,12 +6,13 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Utility data structures and algorithms."""
-import json
+
+from collections.abc import Iterable
 
 import jinja2
 import requests
 from jsonschema import RefResolver, validate
-from pkg_resources import resource_filename, resource_string
+from pkg_resources import resource_filename
 
 base_schemas_path = resource_filename(__name__, 'jsonschemas/')
 templateLoader = jinja2.FileSystemLoader( searchpath=resource_filename(__name__, 'templates/'))
@@ -77,3 +78,41 @@ class Utils:
         """Render Jinja2 HTML template."""
         template = templateEnv.get_template( template_name )
         return template.render(**kwargs)
+
+    @staticmethod
+    def build_bbox(bbox):
+        """Define a common way to create the minimum bounding region.
+
+        :param bbox: The bounding box
+        :type bbox: Union[str,List[float],Tuple[float]]
+
+        :returns shapely.geometry.base.BaseGeometry
+        """
+        from shapely.geometry import box
+        from shapely.geometry.base import BaseGeometry
+
+        if isinstance(bbox, str):
+            try:
+                bbox = [float(elm) for elm in bbox.split(',')]
+            except ValueError:
+                raise TypeError(f'Invalid bbox {bbox}')
+
+        if isinstance(bbox, Iterable):
+            bbox = box(*bbox)
+
+        if not isinstance(bbox, BaseGeometry) or bbox.is_empty:
+            raise TypeError(f'Invalid bbox {bbox}')
+
+        return bbox
+
+    @staticmethod
+    def build_bbox_as_str(bbox) -> str:
+        """Retrieve the string representation of a minimum bounding region.
+
+        :param bbox: The bounding box
+
+        :returns str
+        """
+        bounds = Utils.build_bbox(bbox).bounds
+
+        return f'{bounds[0]},{bounds[1]},{bounds[2]},{bounds[3]}'
