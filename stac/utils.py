@@ -92,7 +92,10 @@ class Utils:
         from shapely.geometry.base import BaseGeometry
 
         if isinstance(bbox, str):
-            bbox = [float(elm) for elm in bbox.split(',')]
+            try:
+                bbox = [float(elm) for elm in bbox.split(',')]
+            except ValueError:
+                raise TypeError(f'Invalid bbox {bbox}')
 
         if isinstance(bbox, Iterable):
             bbox = box(*bbox)
