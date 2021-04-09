@@ -49,6 +49,8 @@ class Utils:
 
                 response = requests.post(url, json=params)
             else:
+                if 'collections' in params and isinstance(params['collections'], Iterable):
+                    params['collections'] = ','.join(params['collections'])
                 response = requests.get(url, params=params)
         else:
             response = requests.get(url)
