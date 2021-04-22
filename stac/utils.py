@@ -49,7 +49,7 @@ class Utils:
 
                 response = requests.post(url, json=params)
             else:
-                if 'collections' in params and isinstance(params['collections'], Iterable):
+                if 'collections' in params and type(params['collections']) in (tuple, list):
                     params['collections'] = ','.join(params['collections'])
                 response = requests.get(url, params=params)
         else:
