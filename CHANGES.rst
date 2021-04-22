@@ -9,6 +9,12 @@
 Changes
 =======
 
+Version 0.9.0-11 (2021-04-22)
+-----------------------------
+
+- Fix bug in /search using GET method (`#86 <https://github.com/brazil-data-cube/stac.py/issues/86>`_).
+
+
 Version 0.9.0-10 (2021-04-09)
 -----------------------------
 
