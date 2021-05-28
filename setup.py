@@ -20,6 +20,7 @@ docs_require = [
     'Sphinx>=2.2',
     'sphinx_rtd_theme',
     'sphinx-copybutton',
+    'sphinx-autoapi',
 ]
 
 tests_require = [

@@ -17,6 +17,10 @@ more about the options to be used for configuration, please, see:
 import stac
 import sphinx_rtd_theme
 
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
@@ -33,9 +37,11 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.napoleon',
+    'sphinx.ext.autosummary',
     'sphinx.ext.todo',
     'sphinx_copybutton',
     'sphinx_rtd_theme',
+    'autoapi.extension'
 ]
 
 # Paths that contain templates, relative to this directory.
@@ -109,5 +115,10 @@ numfig_format = {
     'code-block': 'Code snippet %s -',
     'section': 'Section %s.'
 }
+
+
+autoapi_dirs = ['../../stac']
+autoapi_root = 'api'
+autoapi_add_toctree_entry = False
 
 master_doc = 'index'
