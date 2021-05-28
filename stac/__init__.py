@@ -18,4 +18,6 @@ from .utils import Utils
 from .version import __version__
 
 __all__ = ('__version__',
-           'stac', )
+           'STAC', 'Catalog', 'Collection', 'Extent',
+           'Provider', 'Link', 'Item', 'ItemCollection',
+           'Geometry')

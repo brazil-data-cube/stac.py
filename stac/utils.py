@@ -27,9 +27,8 @@ class Utils:
 
         :param url: The URL to query must be a valid STAC endpoint.
         :type url: str
-
         :param params: (optional) Dictionary, list of tuples or bytes to send
-        in the query string for the underlying `Requests`.
+            in the query string for the underlying `Requests`.
         :type params: dict
 
         :rtype: dict
@@ -49,7 +48,7 @@ class Utils:
 
                 response = requests.post(url, json=params)
             else:
-                if 'collections' in params and isinstance(params['collections'], Iterable):
+                if 'collections' in params and type(params['collections']) in (tuple, list):
                     params['collections'] = ','.join(params['collections'])
                 response = requests.get(url, params=params)
         else:
@@ -68,6 +67,8 @@ class Utils:
     @staticmethod
     def validate(stac_object):
         """Validate a STAC Object using its jsonschema.
+
+        :param stac_object: A STAC object.
 
         :raise ValidationError: raise a ValidationError if the STAC Object couldn't be validated.
         """
@@ -88,7 +89,7 @@ class Utils:
         :param bbox: The bounding box
         :type bbox: Union[str,List[float],Tuple[float]]
 
-        :returns shapely.geometry.base.BaseGeometry
+        :rtype: shapely.geometry.base.BaseGeometry
         """
         from shapely.geometry import box
         from shapely.geometry.base import BaseGeometry
@@ -113,7 +114,7 @@ class Utils:
 
         :param bbox: The bounding box
 
-        :returns str
+        :rtype: str
         """
         bounds = Utils.build_bbox(bbox).bounds
 
