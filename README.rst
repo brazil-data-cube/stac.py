@@ -50,7 +50,6 @@ Python Client Library for STAC
         :target: https://discord.com/channels/689541907621085198#
         :alt: Join us at Discord
 
-
 About
 =====
 
@@ -62,16 +61,50 @@ Installation
 ============
 
 
-Linux, macOS, and Windows users can get ``stac.py`` from the `Python Package Index <https://pypi.org/project/stac.py/>`_ with a recent version of ``pip``::
+To install ``stac.py`` under your virtualenv, ensure you have the latest setuptools::
+
+    pip install -U setuptools
+
+Then::
 
     pip install stac.py
 
+If you want rasterio support::
+
+    pip install stac.py[geo]
+
+For development version::
+
+    pip install https://github.com/brazil-data-cube/stac.py/tarball/master
+
+
+Usage
+=====
+
+Below is a quick example on how to use ```stac.py``.
+
+.. code-block:: python
+
+    from stac import STAC
+
+    service = stac.STAC("https://brazildatacube.dpi.inpe.br/stac", access_token="your-token")
+
+    print(service.catalog) # show all available collections
+
+    collection = service.collections('CB4_64_16D_STK') # get a collection
+
+    items = collection.get_items() # get the collection items
+
+    arr = items[0].read("BAND14") # read the asset 'BAND14' from the first item as a numpy array.
+
+
+For more information take a look at our `Documentation <https://stacpy.readthedocs/en/latest/>`_ page.
 
 Developer Documentation
 =======================
 
 
-See https://stacpy.readthedocs.io/en/latest.
+See `CONTRIBUTING <CONTRIBUTING.rst>`_.
 
 
 License
