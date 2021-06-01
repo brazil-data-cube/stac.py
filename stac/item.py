@@ -10,10 +10,10 @@
 import json
 import os
 import shutil
-from collections.abc import Iterable
 from urllib.parse import urlparse
 
 import requests
+import requests.exceptions
 from pkg_resources import resource_string
 
 from .common import Link, Provider
@@ -61,11 +61,11 @@ class Asset(dict):
             filename = os.path.join(dir, filename)
             os.makedirs(os.path.dirname(filename), exist_ok=True)
 
-        response = requests.get(self['href'], stream=True)
-
-        response.raise_for_status()
-
         try:
+            response = requests.get(self['href'], stream=True)
+
+            response.raise_for_status()
+
             from tqdm import tqdm
 
             with tqdm.wrapattr(open(filename, 'wb'), 'write', miniters=1,
@@ -77,6 +77,18 @@ class Asset(dict):
         except ImportError:
             with open(filename, 'wb') as f:
                 shutil.copyfileobj(response.raw, f)
+        except requests.exceptions.ConnectionError as e:
+            raise ConnectionError(f'(Connection Refused) {e.request.url}')
+        except requests.exceptions.HTTPError as e:
+            reason = e.response.reason
+            msg = 'Could not download this resource.'
+            if e.response.status_code == 403:
+                if e.request.headers.get('x-api-key') or 'access_token=' in e.request.url:
+                    msg = "You don't have permission to download this resource."
+                else:
+                    msg = 'Missing Authentication Token.'  # TODO: Improve this message for any STAC provider.
+
+            raise RuntimeError(f'({reason}) {msg}')
 
         return filename
 
