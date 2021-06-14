@@ -9,6 +9,14 @@
 Changes
 =======
 
+
+Version 0.9.0-12 (2021-06-15)
+-----------------------------
+
+- Improve ReadTheDocs documentation related with API (`#81 <https://github.com/brazil-data-cube/stac.py/issues/81>`_).
+- Improve error message while downloading or accessing any asset (`#68 <https://github.com/brazil-data-cube/stac.py/issues/68>`_).
+
+
 Version 0.9.0-11 (2021-04-22)
 -----------------------------
 

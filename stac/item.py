@@ -12,8 +12,6 @@ import os
 import shutil
 from urllib.parse import urlparse
 
-import requests
-import requests.exceptions
 from pkg_resources import resource_string
 
 from .common import Link, Provider
@@ -62,9 +60,7 @@ class Asset(dict):
             os.makedirs(os.path.dirname(filename), exist_ok=True)
 
         try:
-            response = requests.get(self['href'], stream=True)
-
-            response.raise_for_status()
+            response = Utils.safe_request(self['href'], stream=True)
 
             from tqdm import tqdm
 
@@ -77,18 +73,6 @@ class Asset(dict):
         except ImportError:
             with open(filename, 'wb') as f:
                 shutil.copyfileobj(response.raw, f)
-        except requests.exceptions.ConnectionError as e:
-            raise ConnectionError(f'(Connection Refused) {e.request.url}')
-        except requests.exceptions.HTTPError as e:
-            reason = e.response.reason
-            msg = 'Could not download this resource.'
-            if e.response.status_code == 403:
-                if e.request.headers.get('x-api-key') or 'access_token=' in e.request.url:
-                    msg = "You don't have permission to download this resource."
-                else:
-                    msg = 'Missing Authentication Token.'  # TODO: Improve this message for any STAC provider.
-
-            raise RuntimeError(f'({reason}) {msg}')
 
         return filename
 
@@ -266,16 +250,18 @@ class Item(dict):
         from rasterio.warp import transform
         from rasterio.windows import from_bounds
 
+        # Check Authorization
+        _ = Utils.safe_request(self.assets[band_name]['href'], method='head')
+
+        source_crs = CRS.from_string('EPSG:4326')
+        if crs:
+            source_crs = CRS.from_string(crs)
+
         with rasterio.open(self.assets[band_name]['href']) as dataset:
             if bbox:
                 bbox = Utils.build_bbox(bbox)
 
                 w, s, e, n = bbox.bounds
-
-                source_crs = CRS.from_string('EPSG:4326')
-
-                if crs:
-                    source_crs = CRS.from_string(crs)
 
                 t = transform(source_crs, dataset.crs, [w, e], [s, n])
                 window = from_bounds(t[0][0], t[1][0], t[0][1], t[1][1], dataset.transform)
@@ -283,6 +269,7 @@ class Item(dict):
             asset = dataset.read(1, window=window)
 
         return asset
+
 
 class ItemCollection(dict):
     """The GeoJSON Feature Collection of STAC Items."""
