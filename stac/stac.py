@@ -85,7 +85,7 @@ class STAC:
         return self._collections
 
 
-    def collection(self, collection_id):
+    def collection(self, collection_id) -> Collection:
         """Return the given collection.
 
         :param collection_id: A str for a given collection_id.

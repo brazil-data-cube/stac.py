@@ -10,10 +10,8 @@
 import json
 import os
 import shutil
-from collections.abc import Iterable
 from urllib.parse import urlparse
 
-import requests
 from pkg_resources import resource_string
 
 from .common import Link, Provider
@@ -61,11 +59,9 @@ class Asset(dict):
             filename = os.path.join(dir, filename)
             os.makedirs(os.path.dirname(filename), exist_ok=True)
 
-        response = requests.get(self['href'], stream=True)
-
-        response.raise_for_status()
-
         try:
+            response = Utils.safe_request(self['href'], stream=True)
+
             from tqdm import tqdm
 
             with tqdm.wrapattr(open(filename, 'wb'), 'write', miniters=1,
@@ -254,16 +250,18 @@ class Item(dict):
         from rasterio.warp import transform
         from rasterio.windows import from_bounds
 
+        # Check Authorization
+        _ = Utils.safe_request(self.assets[band_name]['href'], method='head')
+
+        source_crs = CRS.from_string('EPSG:4326')
+        if crs:
+            source_crs = CRS.from_string(crs)
+
         with rasterio.open(self.assets[band_name]['href']) as dataset:
             if bbox:
                 bbox = Utils.build_bbox(bbox)
 
                 w, s, e, n = bbox.bounds
-
-                source_crs = CRS.from_string('EPSG:4326')
-
-                if crs:
-                    source_crs = CRS.from_string(crs)
 
                 t = transform(source_crs, dataset.crs, [w, e], [s, n])
                 window = from_bounds(t[0][0], t[1][0], t[0][1], t[1][1], dataset.transform)
@@ -271,6 +269,7 @@ class Item(dict):
             asset = dataset.read(1, window=window)
 
         return asset
+
 
 class ItemCollection(dict):
     """The GeoJSON Feature Collection of STAC Items."""

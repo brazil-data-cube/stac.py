@@ -18,6 +18,7 @@ base_schemas_path = resource_filename(__name__, 'jsonschemas/')
 templateLoader = jinja2.FileSystemLoader( searchpath=resource_filename(__name__, 'templates/'))
 templateEnv = jinja2.Environment( loader=templateLoader )
 
+
 class Utils:
     """Utils STAC object."""
 
@@ -63,7 +64,6 @@ class Utils:
 
         return response.json()
 
-
     @staticmethod
     def validate(stac_object):
         """Validate a STAC Object using its jsonschema.
@@ -96,7 +96,7 @@ class Utils:
 
         if isinstance(bbox, str):
             try:
-                bbox = [float(elm) for elm in bbox.split(',')]
+                bbox = [float(elm.strip()) for elm in bbox.split(',')]
             except ValueError:
                 raise TypeError(f'Invalid bbox {bbox}')
 
@@ -119,3 +119,40 @@ class Utils:
         bounds = Utils.build_bbox(bbox).bounds
 
         return f'{bounds[0]},{bounds[1]},{bounds[2]},{bounds[3]}'
+
+    @staticmethod
+    def safe_request(url: str, method: str = 'get', **kwargs) -> requests.Response:
+        """Query the given URL for any HTTP Request and handle minimal HTTP Exceptions.
+
+        :param url: The URL to query.
+        :param method: HTTP Method name.
+        :param kwargs: (optional) Any argument supported by `requests.request <https://docs.python-requests.org/en/latest/api/#requests.request>`_
+
+        :raise HTTPError - For any HTTP error related.
+        :raise ConnectionError - For any error related ConnectionError such InternetError
+
+        :rtype: requests.Response
+        """
+        try:
+            response = requests.request(method, url, **kwargs)
+
+            response.raise_for_status()
+
+            return response
+        except requests.exceptions.ConnectionError as e:
+            raise ConnectionError(f'(Connection Refused) {e.request.url}')
+        except requests.exceptions.HTTPError as e:
+            if e.response is None:
+                raise
+
+            reason = e.response.reason
+            msg = str(e)
+            if e.response.status_code == 403:
+                if e.request.headers.get('x-api-key') or 'access_token=' in e.request.url:
+                    msg = "You don't have permission to request this resource."
+                else:
+                    msg = 'Missing Authentication Token.'  # TODO: Improve this message for any STAC provider.
+            elif e.response.status_code == 500:
+                msg = 'Could not request this resource.'
+
+            raise requests.exceptions.HTTPError(f'({reason}) {msg}', request=e.request, response=e.response)

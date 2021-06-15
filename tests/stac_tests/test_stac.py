@@ -272,6 +272,43 @@ class TestStac:
             with pytest.raises(TypeError):
                 s.search(filter={"bbox": -90})
 
+    def test_stac_read_forbidden(self, stac_objects, requests_mock):
+        for k in stac_objects:
+            s = stac.STAC(url + "/stac" if k != '0.9.0' else url, True)
+
+            requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
+                              status_code=200,
+                              headers={'content-type': 'application/json'})
+
+            response = s.catalog
+
+            requests_mock.get(match_url, json=stac_objects[k]['items.json'],
+                              status_code=200,
+                              headers={'content-type': 'application/json'})
+
+            response = s.search()
+            item = response.features[0]
+
+            requests_mock.head(item.assets['thumbnail']['href'], status_code=403,
+                               headers={'content-type': 'application/json'})
+
+            with pytest.raises(requests.exceptions.HTTPError) as err:
+                _ = item.read('thumbnail')
+            assert err.value.response.status_code == 403
+            # No reason is set when using Mock
+            assert str(err.value) == '(None) Missing Authentication Token.'
+
+            item.assets['thumbnail']['href'] += '?access_token=test'
+
+            requests_mock.head(item.assets['thumbnail']['href'], status_code=403,
+                               headers={'content-type': 'application/json'})
+
+            with pytest.raises(requests.exceptions.HTTPError) as err:
+                _ = item.read('thumbnail')
+            assert err.value.response.status_code == 403
+            assert str(err.value) == "(None) You don't have permission to request this resource."
+
+
 class TestCli:
     def test_catalog(self, stac_objects, requests_mock, runner):
         for k in stac_objects:
