@@ -53,14 +53,15 @@ class STAC:
 
         :return list of available collections.
         """
-        if len(self._collections) > 0:
-            return list(self._collections.keys())
+        if not self._catalog:
+            url = f'{self._url}{self._access_token}'
+            response = Utils._get(url)
 
-        url = f'{self._url}{self._access_token}'
-        response = Utils._get(url)
+            self._catalog = Catalog(response, self._validate)
 
-        self._catalog = Catalog(response, self._validate)
-
+        if not self._collections:
+            self.collections           
+        
         for i in self._catalog.links:
             if i.rel == 'child':
                 if '?' in i.href:  # pragma: no cover
