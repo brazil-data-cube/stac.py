@@ -60,7 +60,7 @@ class STAC:
             self._catalog = Catalog(response, self._validate)
 
         if not self._collections:
-            self.collections           
+            self.collections       
         
         for i in self._catalog.links:
             if i.rel == 'child':
