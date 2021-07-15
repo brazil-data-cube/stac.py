@@ -10,6 +10,14 @@ Changes
 =======
 
 
+Version 0.9.0-13 (2021-07-19)
+-----------------------------
+
+- Support STAC root url ended in '/' that aren't 'stac/' (`#96 <https://github.com/brazil-data-cube/stac.py/issues/96>`_).
+- Fix bug in get 'summaries' when not is a dictionary (`#97 <https://github.com/brazil-data-cube/stac.py/issues/97>`_).
+- Returns all collections in the catalog function, regardless of whether it is set to `rel=child`.
+
+
 Version 0.9.0-12 (2021-06-15)
 -----------------------------
 
