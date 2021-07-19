@@ -80,8 +80,7 @@ class STAC:
         :rype: dict
         """
         url = '/'.join(self._url.split('/')[:-1]) if self._url.endswith('/stac') else self._url
-        url = url[:-1] if url[-1] == '/' else url
-        data = Utils._get(f'{url}/collections{self._access_token}')
+        data = Utils._get(f'{url.rstrip("/")}/collections{self._access_token}')
         self._collections = {collection['id']: Collection(collection, self._validate) for collection in data['collections']}
 
         return self._collections
@@ -101,8 +100,7 @@ class STAC:
             return self._collections[collection_id]
         try:
             url = '/'.join(self._url.split('/')[:-1]) if self._url.endswith('/stac') else self._url
-            url = url[:-1] if url[-1] == '/' else url
-            data = Utils._get(f'{url}/collections/{collection_id}{self._access_token}')
+            data = Utils._get(f'{url.rstrip("/")}/collections/{collection_id}{self._access_token}')
             self._collections[collection_id] = Collection(data, self._validate)
         except HTTPError as e:
             raise KeyError(f'Could not retrieve information for collection: {collection_id}')
