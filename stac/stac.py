@@ -53,14 +53,15 @@ class STAC:
 
         :return list of available collections.
         """
-        if len(self._collections) > 0:
-            return list(self._collections.keys())
+        if not self._catalog:
+            url = f'{self._url}{self._access_token}'
+            response = Utils._get(url)
 
-        url = f'{self._url}{self._access_token}'
-        response = Utils._get(url)
+            self._catalog = Catalog(response, self._validate)
 
-        self._catalog = Catalog(response, self._validate)
-
+        if not self._collections:
+            self.collections       
+        
         for i in self._catalog.links:
             if i.rel == 'child':
                 if '?' in i.href:  # pragma: no cover
@@ -79,7 +80,7 @@ class STAC:
         :rype: dict
         """
         url = '/'.join(self._url.split('/')[:-1]) if self._url.endswith('/stac') else self._url
-        data = Utils._get(f'{url}/collections{self._access_token}')
+        data = Utils._get(f'{url.rstrip("/")}/collections{self._access_token}')
         self._collections = {collection['id']: Collection(collection, self._validate) for collection in data['collections']}
 
         return self._collections
@@ -99,7 +100,7 @@ class STAC:
             return self._collections[collection_id]
         try:
             url = '/'.join(self._url.split('/')[:-1]) if self._url.endswith('/stac') else self._url
-            data = Utils._get(f'{url}/collections/{collection_id}{self._access_token}')
+            data = Utils._get(f'{url.rstrip("/")}/collections/{collection_id}{self._access_token}')
             self._collections[collection_id] = Collection(data, self._validate)
         except HTTPError as e:
             raise KeyError(f'Could not retrieve information for collection: {collection_id}')

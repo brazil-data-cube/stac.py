@@ -77,6 +77,11 @@ class TestStac:
                               status_code=200,
                               headers={'content-type':'application/json'})
 
+            requests_mock.get(re.compile(url+'/collections'),
+                              json=dict(collections=[stac_objects[k]['collection.json']]),
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
             response = s.catalog
             assert s._catalog.stac_version
             assert s._catalog.id
@@ -105,6 +110,12 @@ class TestStac:
             requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
+
+            requests_mock.get(re.compile(url+'/collections'),
+                              json=dict(collections=[stac_objects[k]['collection.json']]),
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
             response = s.catalog
 
             requests_mock.get(match_url, json=stac_objects[k]['collection.json'],
@@ -138,6 +149,12 @@ class TestStac:
             requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
+
+            requests_mock.get(re.compile(url+'/collections'),
+                              json=dict(collections=[stac_objects[k]['collection.json']]),
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
             response = s.catalog
 
             requests_mock.get(match_url,
@@ -168,6 +185,12 @@ class TestStac:
                 requests_mock.get(re.compile(url+'/stac'), json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
+
+            requests_mock.get(re.compile(url+'/collections'),
+                              json=dict(collections=[stac_objects[k]['collection.json']]),
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+            
             catalog = s.catalog
 
             s.catalog #test for non empty catalog
@@ -212,6 +235,12 @@ class TestStac:
             requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
+
+            requests_mock.get(re.compile(url+'/collections'),
+                              json=dict(collections=[stac_objects[k]['collection.json']]),
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+                              
             response = s.catalog
 
             requests_mock.get(match_url, json=stac_objects[k]['collection.json'],
@@ -248,6 +277,11 @@ class TestStac:
                               status_code=200,
                               headers={'content-type':'application/json'})
 
+            requests_mock.get(re.compile(url+'/collections'),
+                              json=dict(collections=[stac_objects[k]['collection.json']]),
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
             response = s.catalog
 
             requests_mock.get(match_url, json=stac_objects[k]['items.json'],
@@ -266,6 +300,11 @@ class TestStac:
                               status_code=200,
                               headers={'content-type':'application/json'})
 
+            requests_mock.get(re.compile(url+'/collections'),
+                              json=dict(collections=[stac_objects[k]['collection.json']]),
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
             with pytest.raises(TypeError):
                 s.search(filter={"bbox": ""})
 
@@ -279,6 +318,11 @@ class TestStac:
             requests_mock.get(match_url, json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type': 'application/json'})
+
+            requests_mock.get(re.compile(url+'/collections'),
+                              json=dict(collections=[stac_objects[k]['collection.json']]),
+                              status_code=200,
+                              headers={'content-type':'application/json'})
 
             response = s.catalog
 
@@ -316,6 +360,11 @@ class TestCli:
                               status_code=200,
                               headers={'content-type':'application/json'})
 
+            requests_mock.get(re.compile(url+'/collections'),
+                              json=dict(collections=[stac_objects[k]['collection.json']]),
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
             result = runner.invoke(stac.cli.catalog, ['--url', url + "/stac" if k != '0.9.0' else url])
             assert result.exit_code == 0
             assert 'my_collection1' in result.output
@@ -342,8 +391,13 @@ class TestCli:
             requests_mock.get(re.compile(url + "/stac" if k != '0.9.0' else url+'/'), json=stac_objects[k]['catalog.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
+            
+            requests_mock.get(re.compile(url+'/collections'), 
+                              json=dict(collections=[stac_objects[k]['collection.json']]),
+                              status_code=200,
+                              headers={'content-type':'application/json'})
 
-            requests_mock.get(re.compile(url+'/collections'), json=stac_objects[k]['collection.json'],
+            requests_mock.get(re.compile(url+'/collections/my_collection1'), json=stac_objects[k]['collection.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
 
@@ -367,7 +421,12 @@ class TestCli:
                               status_code=200,
                               headers={'content-type':'application/json'})
 
-            requests_mock.get(re.compile(url+'/collections'), json=stac_objects[k]['collection.json'],
+            requests_mock.get(re.compile(url+'/collections'),
+                              json=dict(collections=[stac_objects[k]['collection.json']]),
+                              status_code=200,
+                              headers={'content-type':'application/json'})
+
+            requests_mock.get(re.compile(url+'/collections/my_collection1'), json=stac_objects[k]['collection.json'],
                               status_code=200,
                               headers={'content-type':'application/json'})
 

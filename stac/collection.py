@@ -24,7 +24,7 @@ class Stats(dict):
 
         :param data: Dict with Stats metadata.
         """
-        super(Stats, self).__init__(data or {})
+        super(Stats, self).__init__(data if (data and isinstance(data, dict)) else {})
 
     @property
     def min(self):
