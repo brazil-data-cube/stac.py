@@ -70,7 +70,7 @@ class STAC:
                     self._collections[collection_name[:collection_name.index('?')]] = None
                 else:
                     self._collections[i.href.split('/')[-1]] = None
-        return list(self._collections.items())
+        return list(self._collections.keys())
 
 
     @property
