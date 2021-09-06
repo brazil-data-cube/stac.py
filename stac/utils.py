@@ -23,7 +23,7 @@ class Utils:
     """Utils STAC object."""
 
     @staticmethod
-    def _get(url, params=None):
+    def _get(url, params=None, **request_kwargs):
         """Query the STAC service using HTTP GET verb and return the result as a JSON document.
 
         :param url: The URL to query must be a valid STAC endpoint.
@@ -47,13 +47,13 @@ class Utils:
                 if 'bbox' in params and isinstance(params['bbox'], str):
                     params['bbox'] = [float(coord) for coord in params['bbox'].split(',')]
 
-                response = requests.post(url, json=params)
+                response = requests.post(url, json=params, **request_kwargs)
             else:
                 if 'collections' in params and type(params['collections']) in (tuple, list):
                     params['collections'] = ','.join(params['collections'])
-                response = requests.get(url, params=params)
+                response = requests.get(url, params=params,  **request_kwargs)
         else:
-            response = requests.get(url)
+            response = requests.get(url,  **request_kwargs)
 
         response.raise_for_status()
 
