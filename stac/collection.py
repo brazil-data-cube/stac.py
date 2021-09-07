@@ -108,8 +108,14 @@ class Collection(Catalog):
         if self._validate:
             Utils.validate(self)
 
-        self._summaries = {k: Stats(v) for k, v in self['summaries'].items()} if 'summaries' in self else {}
-        self._providers = [Provider(provider) for provider in self['providers']] if 'providers' in self else []
+        try:
+            self._summaries = {k: Stats(v) for k, v in self['summaries'].items()} if 'summaries' in self else {}
+        except TypeError:
+            self._summaries = {}
+        try:
+            self._providers = [Provider(provider) for provider in self['providers']] if 'providers' in self else []
+        except TypeError:
+            self._providers = []
 
 
     @property
