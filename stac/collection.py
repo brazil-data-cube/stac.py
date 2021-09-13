@@ -107,16 +107,8 @@ class Collection(Catalog):
 
         if self._validate:
             Utils.validate(self)
-
-        try:
-            self._summaries = {k: Stats(v) for k, v in self['summaries'].items()} if 'summaries' in self else {}
-        except TypeError:
-            self._summaries = {}
-        try:
-            self._providers = [Provider(provider) for provider in self['providers']] if 'providers' in self else []
-        except TypeError:
-            self._providers = []
-
+        self._summaries = {k: Stats(v) for k, v in self['summaries'].items()} if self.get('summaries') else {}
+        self._providers = [Provider(provider) for provider in self['providers']] if self.get('providers') else []
 
     @property
     def keywords(self):
