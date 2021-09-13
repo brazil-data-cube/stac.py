@@ -107,8 +107,10 @@ class Collection(Catalog):
 
         if self._validate:
             Utils.validate(self)
+
         self._summaries = {k: Stats(v) for k, v in self['summaries'].items()} if self.get('summaries') else {}
         self._providers = [Provider(provider) for provider in self['providers']] if self.get('providers') else []
+
 
     @property
     def keywords(self):
