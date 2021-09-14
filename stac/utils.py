@@ -39,7 +39,7 @@ class Utils:
         response = None
 
         if params is not None:
-            if 'intersects' in params or 'query' in params:
+            if 'intersects' in params or 'query' in params or 'filter' in params:
                 if 'collections' in params and isinstance(params['collections'], str):
                     params['collections'] = params['collections'].split(',')
                 if 'ids' in params and isinstance(params['ids'], str):
