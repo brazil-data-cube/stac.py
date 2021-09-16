@@ -35,7 +35,7 @@ class STAC:
         :param access_token: Authentication for the STAC API
         :type access_token: str
         """
-        self._url = url
+        self._url = url.rstrip('/')
         self._collections = dict()
         self._catalog = dict()
         self._validate = validate
