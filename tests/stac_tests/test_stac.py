@@ -306,10 +306,10 @@ class TestStac:
                               headers={'content-type':'application/json'})
 
             with pytest.raises(TypeError):
-                s.search(filter={"bbox": ""})
+                s.search(bbox="")
 
             with pytest.raises(TypeError):
-                s.search(filter={"bbox": -90})
+                s.search(bbox=-90)
 
     def test_stac_read_forbidden(self, stac_objects, requests_mock):
         for k in stac_objects:
