@@ -116,7 +116,7 @@ def search(url, collections, ids, intersects, limit, next, page, datetime, bbox,
     if ids is not None:
         filter['ids'] = ids
 
-    retval = service.search(filter=filter)
+    retval = service.search(**filter)
 
     print(json.dumps(retval, indent=2))
 
