@@ -50,6 +50,10 @@ Python Client Library for STAC
         :target: https://discord.com/channels/689541907621085198#
         :alt: Join us at Discord
 
+.. image:: https://mybinder.org/badge_logo.svg
+        :target: https://mybinder.org/v2/gh/cedadev/stac.py/usage-notebook?filepath=examples%2Fusage.ipynb
+        :alt: Binder interactive notebook
+
 About
 =====
 
