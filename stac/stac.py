@@ -110,6 +110,22 @@ class STAC:
         return self._collections[collection_id]
 
 
+    def items(self, collection_id, item_id=None, **query):
+        """Retrieve Items given collection id, specified by matching item id and filter.
+
+        :param collection_id: A str for a given collection_id.
+        :type collection_id: str
+
+        :param item_id: (optional) a str with a STAC Item id.
+        :type item_id: str
+
+        :param query: (optional) A dictionary with valid STAC query parameters from query kwarg.
+        :type query: dict
+        """
+        collection = self.collection(collection_id=collection_id)
+        return collection.get_items(item_id=item_id, filter=query)
+
+
     def search(self, **query):
         """Retrieve Items matching a filter.
 
