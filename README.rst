@@ -11,6 +11,7 @@ Python Client Library for STAC
 ==============================
 
 
+
 .. image:: https://img.shields.io/badge/license-MIT-green
         :target: https://github.com//brazil-data-cube/stac.py/blob/master/LICENSE
         :alt: Software License
@@ -49,6 +50,14 @@ Python Client Library for STAC
 .. image:: https://img.shields.io/discord/689541907621085198?logo=discord&logoColor=ffffff&color=7389D8
         :target: https://discord.com/channels/689541907621085198#
         :alt: Join us at Discord
+
+
+
+DEPRECATED
+==========
+
+This repo is no longer supported, please consider using `PySTAC-Client <https://pystac-client.readthedocs.io/en/latest/>`_ instead.
+
 
 About
 =====
